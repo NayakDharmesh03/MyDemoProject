@@ -26,7 +26,6 @@ class CollectionImageVC: UIViewController {
     var totalImage = 0
     var currentIndex = 0
     
-//    var gallaryImages = ["Emily","William","Sophia","Liam","Ethan"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,34 +57,15 @@ class CollectionImageVC: UIViewController {
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         
-        if currentIndex < totalImage - 1 {
-            
-            currentIndex += 1
-            
-                
-            let visibleItems = collectionview.indexPathsForVisibleItems
-            let currentItem = visibleItems[0]
-            let nextItem = IndexPath(item: currentItem.item + 1, section: currentItem.section)
-        
-            collectionview.scrollToItem(at: nextItem, at: .left, animated: true)
-            collectionview.reloadData()
-        }
-       
+        currentIndex = (currentIndex + 1) % gallaryImageArr.count
+        self.collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
     }
 
     @IBAction func previousButtonTapped(_ sender: UIButton) {
-
-        if currentIndex > 0 {
-            
-            currentIndex -= 1
-            let visibleItems = collectionview.indexPathsForVisibleItems
-            let currentItem = visibleItems[0]
-            let previousItem = IndexPath(item: currentItem.item - 1, section: currentItem.section)
-
-            collectionview.scrollToItem(at: previousItem, at: .right, animated: true)
-            collectionview.reloadData()
-        }
         
+        
+        currentIndex = (currentIndex + gallaryImageArr.count - 1) % gallaryImageArr.count
+        collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
     }
 
     
@@ -108,16 +88,30 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
         return mycell
     }
     
+    
+    // This is sliding images us
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let visibleRect = CGRect(origin: collectionview.contentOffset, size: collectionview.bounds.size)
-        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-        guard let indexPath = collectionview.indexPathForItem(at: visiblePoint) else { return }
-        currentIndex = indexPath.row
-        imageCountlbl.text = "\(currentIndex+1)" + "/" + "\(gallaryImageArr.count)"
-        nextBtn.isEnabled = currentIndex < totalImage - 1
-        previousBtn.isEnabled = currentIndex > 0
-
+        
+        currentIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
     }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            let contentOffset = scrollView.contentOffset.x
+            let contentWidth = scrollView.contentSize.width
+            let pageWidth = scrollView.bounds.width
+            let currentPage = currentIndex
+            let nextPage = contentOffset > CGFloat(currentPage) * pageWidth ? (currentPage + 1) % gallaryImageArr.count : (currentPage - 1 + gallaryImageArr.count) % gallaryImageArr.count
+            let nextX = CGFloat(nextPage) * pageWidth
+            let distance = abs(contentOffset - nextX)
+            let duration = TimeInterval(distance / pageWidth * 0.3)
+            currentIndex = nextPage
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveEaseOut], animations: {
+                scrollView.contentOffset.x = nextX
+            }, completion: nil)
+        }
+    }
+
     
 }
 

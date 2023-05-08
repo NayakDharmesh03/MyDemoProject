@@ -60,10 +60,11 @@ class WhatsAppVC: UIViewController {
     
     var isExpanded: Bool = false
     
-    var selectedIndex = -1
-    
+    var selectedIndex = 0
+    var lastSelectedIndex = -1
     var isCollapce = false
-    
+    var ArrContactNo:[ContactNumber] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -77,15 +78,98 @@ class WhatsAppVC: UIViewController {
 
         // Set the text color of the unselected segments
         segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
+        setArrData()
+        
+        //****************
+        var arr = ["2","3","5","7"]
+        
+        var tuppel = (1,2,3,"10",2.4)
+        tuppel.0 = 100
+        
+        var str = "DharmeshNayak"
+              
+        let startIndex = str.index(str.startIndex, offsetBy: 6)
+        let endIndex = str.index(str.startIndex, offsetBy: 13)
+        let substr = str[startIndex..<endIndex]
 
+        print(substr) // Output: "worl"
+
+        
+        print(tuppel.0)
+//        print(arr)
+        
+        for i in arr{
+            print(i)
+        }
+        print(arr.index(of: "5"))
+//        var result = arr.map{
+//            print($0 + 2)
+//        }
+//
+//        var resul2 = arr.compactMap{
+//            print($0 + 1)
+//        }
+//        function1( 5,5)
+//        closerv(10, 10)
+    }
+    
+    var closerv = { (a:Int,b:Int) in
+        print("Sum : \(a+b)")
+    }
+    func function1(_ a:Int = 8 ,_ b:Int){
+        print(a+b)
     }
 
+   func setArrData(){
+        
+    let obj = ContactNumber(strName: contactsName[0], strMobileNo: contactsNo[0], imgPhoto: UIImage(named: contactsName[0])!, BtnCollspan: false, timeLbl: timeArr[0])
+    let obj1 = ContactNumber(strName: contactsName[1], strMobileNo: contactsNo[1], imgPhoto: UIImage(named: contactsName[1])!, BtnCollspan: false, timeLbl: timeArr[1])
+    let obj2 = ContactNumber(strName: contactsName[2], strMobileNo: contactsNo[2], imgPhoto: UIImage(named: contactsName[2])!, BtnCollspan: false, timeLbl: timeArr[2])
+    let obj3 = ContactNumber(strName: contactsName[3], strMobileNo: contactsNo[3], imgPhoto: UIImage(named: contactsName[3])!, BtnCollspan: false, timeLbl: timeArr[3])
+    let obj4 = ContactNumber(strName: contactsName[4], strMobileNo: contactsNo[4], imgPhoto: UIImage(named: contactsName[4])!, BtnCollspan: false, timeLbl: timeArr[4])
+    let obj5 = ContactNumber(strName: contactsName[5], strMobileNo: contactsNo[5], imgPhoto: UIImage(named: contactsName[5])!, BtnCollspan: false, timeLbl: timeArr[5])
+    let obj6 = ContactNumber(strName: contactsName[6], strMobileNo: contactsNo[6], imgPhoto: UIImage(named: contactsName[6])!, BtnCollspan: false, timeLbl: timeArr[6])
+    let obj7 = ContactNumber(strName: contactsName[7], strMobileNo: contactsNo[7], imgPhoto: UIImage(named: contactsName[7])!, BtnCollspan: false, timeLbl: timeArr[7])
+    let obj8 = ContactNumber(strName: contactsName[8], strMobileNo: contactsNo[8], imgPhoto: UIImage(named: contactsName[8])!, BtnCollspan: false, timeLbl: timeArr[8])
+    let obj9 = ContactNumber(strName: contactsName[9], strMobileNo: contactsNo[9], imgPhoto: UIImage(named: contactsName[9])!, BtnCollspan: false, timeLbl: timeArr[9])
+    let obj10 = ContactNumber(strName: contactsName[10], strMobileNo: contactsNo[10], imgPhoto: UIImage(named: contactsName[10])!, BtnCollspan: false, timeLbl: timeArr[10])
+    let obj11 = ContactNumber(strName: contactsName[11], strMobileNo: contactsNo[11], imgPhoto: UIImage(named: contactsName[11])!, BtnCollspan: false, timeLbl: timeArr[11])
+    let obj12 = ContactNumber(strName: contactsName[12], strMobileNo: contactsNo[12], imgPhoto: UIImage(named: contactsName[12])!, BtnCollspan: false, timeLbl: timeArr[12])
+    let obj13 = ContactNumber(strName: contactsName[13], strMobileNo: contactsNo[13], imgPhoto: UIImage(named: contactsName[13])!, BtnCollspan: false, timeLbl: timeArr[13])
+    let obj14 = ContactNumber(strName: contactsName[14], strMobileNo: contactsNo[14], imgPhoto: UIImage(named: contactsName[14])!, BtnCollspan: false, timeLbl: timeArr[14])
+    let obj15 = ContactNumber(strName: contactsName[15], strMobileNo: contactsNo[15], imgPhoto: UIImage(named: contactsName[15])!, BtnCollspan: false, timeLbl: timeArr[15])
+    let obj16 = ContactNumber(strName: contactsName[16], strMobileNo: contactsNo[16], imgPhoto: UIImage(named: contactsName[16])!, BtnCollspan: false, timeLbl: timeArr[16])
+    let obj17 = ContactNumber(strName: contactsName[17], strMobileNo: contactsNo[17], imgPhoto: UIImage(named: contactsName[17])!, BtnCollspan: false, timeLbl: timeArr[17])
+//    let obj18 = ContactNumber(strName: contactsName[18], strMobileNo: contactsNo[18], imgPhoto: UIImage(named: contactsName[18])!, BtnCollspan: false, timeLbl: timeArr[18])
+    
+    ArrContactNo.append(obj)
+    ArrContactNo.append(obj1)
+    ArrContactNo.append(obj2)
+    ArrContactNo.append(obj3)
+    ArrContactNo.append(obj4)
+    ArrContactNo.append(obj5)
+    ArrContactNo.append(obj6)
+    ArrContactNo.append(obj7)
+    ArrContactNo.append(obj8)
+    ArrContactNo.append(obj9)
+    ArrContactNo.append(obj10)
+    ArrContactNo.append(obj11)
+    ArrContactNo.append(obj12)
+    ArrContactNo.append(obj13)
+    ArrContactNo.append(obj14)
+    ArrContactNo.append(obj15)
+    ArrContactNo.append(obj16)
+    ArrContactNo.append(obj17)
+//    ArrContactNo.append(obj18)
+
+    
+    }
     //for status bar color
 //    override var preferredStatusBarStyle: UIStatusBarStyle {
 //        return .lightContent
 //    }
     override func viewWillAppear(_ animated: Bool) {
-        self.viewDidLoad()
+//        self.viewDidLoad()
         
         // if also gallery selected then shoiw gallery view
         if segmentControl.selectedSegmentIndex == 1{
@@ -103,6 +187,11 @@ class WhatsAppVC: UIViewController {
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
+    @IBAction func collspanShow(_ sender: UIButton) {
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        ArrContactNo[indexPath.row].btnCollspan.toggle()
+        self.mytableView.reloadRows(at: [indexPath], with: .automatic)
+    }
     @IBAction func showmanu(_ sender: UIButton) {
         self.manuView.alpha = 1
     }
@@ -136,6 +225,12 @@ class WhatsAppVC: UIViewController {
 
         }
     }
+    
+    @IBAction func expandCellbtn(_ sender: UIButton) {
+
+       
+
+    }
 }
 
 extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
@@ -145,49 +240,71 @@ extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = mytableView.dequeueReusableCell(withIdentifier: "cells", for: indexPath) as! contactTableViewCell
+        
         cell.selectionStyle = .none
-        cell.namelbl.text = contactsName[indexPath.row]
-        cell.phoneNoLbl.text = "Phone \(contactsNo[indexPath.row])"
-        cell.timeShowLbl.text = timeArr[indexPath.row]
-        cell.profileImage.image = UIImage(named: contactsName[indexPath.row])
+        //this for cell button collspan btn
+        let button = cell.contentView.viewWithTag(100) as? UIButton
+        
+        let cellObj = ArrContactNo[indexPath.row]
+        
+        cell.namelbl.text = cellObj.name
+        cell.phoneNoLbl.text = "Phone " + " " + cellObj.contactNo
+        cell.profileImage.image = cellObj.image
+        cell.timeShowLbl.text = cellObj.timeLabl
+
+        cell.showbtn.isSelected = cellObj.btnCollspan
+        
+        cell.showbtn.tag = indexPath.row
+        cell.timeShowLbl.tag = indexPath.row
+        cell.namelbl.tag = indexPath.row
+        cell.phoneNoLbl.tag = indexPath.row
+        cell.profileImage.tag = indexPath.row
+        
         return cell
     }
     
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        let obj = ArrContactNo[indexPath.row]
         if self.selectedIndex == indexPath.row && isCollapce == true{
+            obj.btnCollspan = true
             return 121
         }else{
+            obj.btnCollspan = false
             return 85
         }
     }
     
+    
+    // table row collspacing
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+//        let cell = tableView.cellForRow(at: indexPath) as! contactTableViewCell
         
+        let obj = ArrContactNo[indexPath.row]
+        self.selectedIndex = indexPath.row
+        tableView.deselectRow(at: indexPath, animated: false)
         
-        
-         let cell = mytableView.cellForRow(at: indexPath) as! contactTableViewCell
-            
-//         cell.heartImage.image = UIImage(named: "selectedheart")
-//         favouriteCricketer.append(playersName[indexPath.row])
-        
-        tableView.deselectRow(at: indexPath, animated: true)
         if selectedIndex == indexPath.row {
-            if self.isCollapce == false {
-                cell.showbtn.isSelected = false
-              
-                self.isCollapce = true
-            }else{
+            if obj.btnCollspan == true{
+                obj.btnCollspan = false
                 self.isCollapce = false
-                cell.showbtn.isSelected = true
+            }else{
+                obj.btnCollspan = true
+                self.isCollapce = true
             }
         }else{
             self.isCollapce = true
-//            cell.showbtn.isSelected = true
         }
         
-        self.selectedIndex = indexPath.row
+        
+        //this for cell button collspan btn new code
+        for i in 0..<ArrContactNo.count {
+            ArrContactNo[i].btnCollspan = (i == indexPath.row)
+        }
+
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.reloadData()
+
     }
 }
-

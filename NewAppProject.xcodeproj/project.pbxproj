@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -42,6 +42,7 @@
 		5220A74629C472FF00AD016F /* EditProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5220A74529C472FF00AD016F /* EditProfileData.swift */; };
 		5222D24229BB22DB00615306 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5222D24129BB22DB00615306 /* DataBaseManager.swift */; };
 		52241AA029E5616C007AB5E6 /* SideManuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52241A9F29E5616C007AB5E6 /* SideManuVC.swift */; };
+		5226394B2A04D55E00CAF6C0 /* ContactNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5226394A2A04D55E00CAF6C0 /* ContactNumber.swift */; };
 		522C96CB29D30C9C00308C77 /* TabBarControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522C96CA29D30C9C00308C77 /* TabBarControl.swift */; };
 		5242376929F1518300FE4B6B /* UsersContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5242376829F1518300FE4B6B /* UsersContacts.swift */; };
 		5243BB0F29B9E67F001EE08F /* ProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5243BB0E29B9E67F001EE08F /* ProfilePage.swift */; };
@@ -57,6 +58,7 @@
 		52F8A98B29E962DB00826524 /* HeaderTitleReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F8A98A29E962DB00826524 /* HeaderTitleReusableView.swift */; };
 		77EE976A74437B57B7484D0E /* Pods_NewAppProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D41A02ECE07493A42BB3E81 /* Pods_NewAppProject.framework */; };
 		C11DE90833206CABE37E7134 /* Pods_NewAppProject_NewAppProjectUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A77EED971A5C531052F8A3 /* Pods_NewAppProject_NewAppProjectUITests.framework */; };
+		E3661F8F2A08F52600A60BFF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = E3661F8E2A08F52600A60BFF /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +122,7 @@
 		5220A74529C472FF00AD016F /* EditProfileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileData.swift; sourceTree = "<group>"; };
 		5222D24129BB22DB00615306 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		52241A9F29E5616C007AB5E6 /* SideManuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideManuVC.swift; sourceTree = "<group>"; };
+		5226394A2A04D55E00CAF6C0 /* ContactNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactNumber.swift; sourceTree = "<group>"; };
 		522C96CA29D30C9C00308C77 /* TabBarControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarControl.swift; sourceTree = "<group>"; };
 		5242376829F1518300FE4B6B /* UsersContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersContacts.swift; sourceTree = "<group>"; };
 		5243BB0E29B9E67F001EE08F /* ProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePage.swift; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3661F8F2A08F52600A60BFF /* Algorithms in Frameworks */,
 				77EE976A74437B57B7484D0E /* Pods_NewAppProject.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +244,7 @@
 				5267B6B329C32FAC0031994D /* myUserData.swift */,
 				521FE66E29FB976A0089F488 /* HomeWorkoutCellData.swift */,
 				5242376829F1518300FE4B6B /* UsersContacts.swift */,
+				5226394A2A04D55E00CAF6C0 /* ContactNumber.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -351,6 +356,9 @@
 			dependencies = (
 			);
 			name = NewAppProject;
+			packageProductDependencies = (
+				E3661F8E2A08F52600A60BFF /* Algorithms */,
+			);
 			productName = NewAppProject;
 			productReference = 091FFA2429B75E8A0029C5BF /* NewAppProject.app */;
 			productType = "com.apple.product-type.application";
@@ -425,6 +433,9 @@
 				Base,
 			);
 			mainGroup = 091FFA1B29B75E8A0029C5BF;
+			packageReferences = (
+				E3661F8D2A08F52600A60BFF /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+			);
 			productRefGroup = 091FFA2529B75E8A0029C5BF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -611,6 +622,7 @@
 				522C96CB29D30C9C00308C77 /* TabBarControl.swift in Sources */,
 				5267B6B429C32FAC0031994D /* myUserData.swift in Sources */,
 				5220A74629C472FF00AD016F /* EditProfileData.swift in Sources */,
+				5226394B2A04D55E00CAF6C0 /* ContactNumber.swift in Sources */,
 				520864BA29E6A69700D6D382 /* HomeWorkoutTableViewCell.swift in Sources */,
 				52EF93BA29F802BA007F7649 /* ViewController1.swift in Sources */,
 			);
@@ -790,6 +802,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				INFOPLIST_FILE = NewAppProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -945,6 +958,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E3661F8D2A08F52600A60BFF /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E3661F8E2A08F52600A60BFF /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E3661F8D2A08F52600A60BFF /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 091FFA1C29B75E8A0029C5BF /* Project object */;
 }

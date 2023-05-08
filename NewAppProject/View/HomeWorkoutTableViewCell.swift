@@ -9,10 +9,12 @@ import UIKit
 import Cosmos
 class HomeWorkoutTableViewCell: UITableViewCell {
     
+    
     @IBOutlet weak var cellView: UIView! //subView
-    @IBOutlet weak var `switch`: UISwitch!
+    @IBOutlet weak var cellsubView: UIView! //subView
+    @IBOutlet weak var btnSwitch: UISwitch!
     @IBOutlet weak var exerciseNameLabel: UILabel!
-    @IBOutlet weak var Slider: UISlider!
+    @IBOutlet weak var mySlider: UISlider!
     @IBOutlet weak var sliderValu: UILabel!
     @IBOutlet weak var star1: UIButton!
     @IBOutlet weak var star2: UIButton!
@@ -37,13 +39,13 @@ class HomeWorkoutTableViewCell: UITableViewCell {
         
         let configuration = UIImage.SymbolConfiguration(pointSize: 12)
         let image = UIImage(systemName: "circle.fill", withConfiguration: configuration)
-        Slider.setThumbImage(image, for: .normal)
-        Slider.setThumbImage(image, for: .highlighted)
+        mySlider.setThumbImage(image, for: .normal)
+        mySlider.setThumbImage(image, for: .highlighted)
         
         coloreView.layer.cornerRadius = 15
         
-        Slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
-               `switch`.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+        mySlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+        btnSwitch.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
         }
         
     
@@ -52,8 +54,8 @@ class HomeWorkoutTableViewCell: UITableViewCell {
         // slider thumb size
         let configuration = UIImage.SymbolConfiguration(pointSize: 18)
         let image = UIImage(systemName: "circle.fill", withConfiguration: configuration)
-        Slider.setThumbImage(image, for: .normal)
-        Slider.setThumbImage(image, for: .highlighted)
+        mySlider.setThumbImage(image, for: .normal)
+        mySlider.setThumbImage(image, for: .highlighted)
         
         //cell view shadow
         cellView.layer.shadowColor = UIColor.black.cgColor
