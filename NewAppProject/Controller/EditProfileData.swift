@@ -478,7 +478,11 @@ extension EditProfileData {
         let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
         toolBar.items = [cancelBtn,flexibleBtn,doneBtn]
+        
         dobTF.inputAccessoryView = toolBar
+        if let date = UserDefaults.standard.value(forKey: "Date") as? Date{
+            datePicker1.date = date
+        }
         
     }
     
@@ -494,10 +498,12 @@ extension EditProfileData {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         dobTF.text = formatter.string(from: datePicker1.date)
+        let selecteddate = datePicker1.date
+        UserDefaults.standard.setValue(datePicker1.date, forKey: "Date")
         self.view.endEditing(true)
     }
     
-    //MARK:- For Time selecting date picker
+//MARK:- For Time selecting date picker
 
         func openTimeDatePicker(){
             datePicker2.preferredDatePickerStyle = .wheels

@@ -14,7 +14,8 @@ class GlobelViewController: UIViewController {
 
     }
     
-
+    
+    
 
 }
 extension UIViewController{
@@ -149,3 +150,5 @@ extension UIViewController{
         
     }
 }
+
+

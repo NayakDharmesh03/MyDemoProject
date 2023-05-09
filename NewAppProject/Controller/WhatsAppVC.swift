@@ -78,47 +78,35 @@ class WhatsAppVC: UIViewController {
 
         // Set the text color of the unselected segments
         segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
+        
+        //removing border of segment
+//        segmentControl.removeBottomBorderForSelectedSegment()
+
         setArrData()
-        
+        segmentControlDesign()
         //****************
-        var arr = ["2","3","5","7"]
-        
-        var tuppel = (1,2,3,"10",2.4)
-        tuppel.0 = 100
+       
         
         var str = "DharmeshNayak"
               
         let startIndex = str.index(str.startIndex, offsetBy: 6)
         let endIndex = str.index(str.startIndex, offsetBy: 13)
         let substr = str[startIndex..<endIndex]
+        print(substr) // Output: "shNayak"
 
-        print(substr) // Output: "worl"
+     
+    }
+    func segmentControlDesign(){
+//        let segmentedControl = UISegmentedControl(items: ["Item 1", "Item 2", "Item 3"])
+        self.segmentControl.selectedSegmentIndex = 0
+//        self.segmentControl.backgroundColor = UIColor.white
+//        self.segmentControl.tintColor = UIColor.blue
 
-        
-        print(tuppel.0)
-//        print(arr)
-        
-        for i in arr{
-            print(i)
-        }
-        print(arr.index(of: "5"))
-//        var result = arr.map{
-//            print($0 + 2)
-//        }
-//
-//        var resul2 = arr.compactMap{
-//            print($0 + 1)
-//        }
-//        function1( 5,5)
-//        closerv(10, 10)
+        // Add a bottom border to the selected segment
+        self.segmentControl.addBottomBorderForSelectedSegment(borderColor: UIColor.white, borderWidth: 3)
+
     }
-    
-    var closerv = { (a:Int,b:Int) in
-        print("Sum : \(a+b)")
-    }
-    func function1(_ a:Int = 8 ,_ b:Int){
-        print(a+b)
-    }
+
 
    func setArrData(){
         
@@ -212,7 +200,6 @@ class WhatsAppVC: UIViewController {
    
     
     @IBAction func segmentControler(_ sender: UISegmentedControl) {
-        
         if sender.selectedSegmentIndex == 1{
             self.titleLbl.text = "Gallery"
             self.myGalleryViewContainer.alpha = 1
@@ -306,5 +293,31 @@ extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
         tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.reloadData()
 
+    }
+}
+extension UISegmentedControl {
+    
+    private var bottomBorderLayer: CALayer? {
+        return layer.sublayers?.first(where: { $0.name == "bottomBorderLayer" })
+    }
+    
+    func addBottomBorderForSelectedSegment(borderColor: UIColor, borderWidth: CGFloat) {
+        guard let selectedSegmentView = subviews[selectedSegmentIndex] as? UIControl else {
+            return
+        }
+        
+        // Remove existing bottom border layer if any
+        bottomBorderLayer?.removeFromSuperlayer()
+        
+        // Add bottom border layer to the selected segment
+        let borderLayer = CALayer()
+        borderLayer.name = "bottomBorderLayer"
+        borderLayer.frame = CGRect(x: 0, y: selectedSegmentView.frame.height - borderWidth, width: selectedSegmentView.frame.width, height: borderWidth)
+        borderLayer.backgroundColor = borderColor.cgColor
+        selectedSegmentView.layer.addSublayer(borderLayer)
+    }
+    
+    func removeBottomBorderForSelectedSegment() {
+        bottomBorderLayer?.removeFromSuperlayer()
     }
 }

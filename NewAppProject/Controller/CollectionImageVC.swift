@@ -36,11 +36,6 @@ class CollectionImageVC: UIViewController {
         totalImage = gallaryImageArr.count
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        collectionview.reloadData()
-    }
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         self.manu.alpha = 0
@@ -55,17 +50,28 @@ class CollectionImageVC: UIViewController {
 
     }
     
+    //nextButtonTapped Action
+
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         
-        currentIndex = (currentIndex + 1) % gallaryImageArr.count
-        self.collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
+        
+        if currentIndex < gallaryImageArr.count - 1 {
+                currentIndex += 1
+            imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
+            collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
+            }
+
     }
 
+    //previousButtonTapped Action
     @IBAction func previousButtonTapped(_ sender: UIButton) {
         
-        
-        currentIndex = (currentIndex + gallaryImageArr.count - 1) % gallaryImageArr.count
-        collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
+        if currentIndex > 0 {
+                currentIndex -= 1
+            imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
+            collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
+            }
+
     }
 
     
@@ -80,10 +86,12 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let mycell = collectionview.dequeueReusableCell(withReuseIdentifier: "mycell", for: indexPath) as! ImageCollectionViewCell
         mycell.images.image = UIImage(named: gallaryImageArr[indexPath.row] )
-
-        imageCountlbl.text = "\(currentIndex+1)" + "/" + "\(gallaryImageArr.count)"
+        
         nextBtn.isEnabled = currentIndex < totalImage - 1
         previousBtn.isEnabled = currentIndex > 0
+        
+        imageCountlbl.text = "\(currentIndex+1)" + "/" + "\(gallaryImageArr.count)"
+        
         
         return mycell
     }
@@ -91,8 +99,13 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
     
     // This is sliding images us
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        
-        currentIndex = Int(scrollView.contentOffset.x / scrollView.bounds.width)
+        let visibleRect = CGRect(origin: collectionview.contentOffset, size: collectionview.bounds.size)
+           let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+           guard let indexPath = collectionview.indexPathForItem(at: visiblePoint) else {
+               return
+           }
+           currentIndex = indexPath.item
+        imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -117,8 +130,7 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
 
 extension CollectionImageVC: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = collectionview.frame.size
-        return CGSize(width: size.width, height: size.height)
+        return collectionView.frame.size
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)

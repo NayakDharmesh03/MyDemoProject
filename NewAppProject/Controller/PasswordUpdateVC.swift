@@ -45,15 +45,18 @@ class PasswordUpdateVC: UIViewController {
     
     @IBAction func updatePassword(_ sender: UIButton) {
         
-        if newPasswordTF.text == "" || conformPassTF.text == ""
+        if newPasswordTF.text == "" && conformPassTF.text == ""
         {
-            self.createAlert(strAlert: "Please Enter Data")
+            self.createAlert(strAlert: "Please fill Password")
         }
-        else if isValidPassword(testStr:newPasswordTF.text!) == false
+        else if newPasswordTF.text == ""
         {
-            self.createAlert(strAlert: "Please Enter Valid & Strong Password")
+            self.createAlert(strAlert: "Please enter new password")
             
-        }else if newPasswordTF.text! != conformPassTF.text!
+        } else if conformPassTF.text == ""{
+            self.createAlert(strAlert: "Please enter conform password")
+        }
+        else if newPasswordTF.text! != conformPassTF.text!
         {
             self.createAlert(strAlert: "Password not match")
         }
