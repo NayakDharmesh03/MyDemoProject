@@ -52,27 +52,40 @@ class ChangePasswordVC: UIViewController {
     
     @IBAction func updatePasswordBtnClicked(_ sender: UIButton) {
         
-        let oldpass = DataBaseManager.shared.matchOldPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!)
+        
+        
+        let oldpassResult = DataBaseManager.shared.matchOldPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!)
                 
         if oldPasswordTF.text == "" && newPasswordTF.text == "" && conformPasswordTF.text == ""
         {
             self.createAlert(strAlert: "Please fill Data")
-        }
-        else if !oldpass {
+        }else if oldpassResult == false  {
             createAlert(strAlert: "OldPassword Not match...")
         }
         else if newPasswordTF.text == ""{
             self.createAlert(strAlert: "Please enter new Password")
         }else if conformPasswordTF.text == ""{
             self.createAlert(strAlert: "Please enter conformpassword")
-        }else if newPasswordTF.text != conformPasswordTF.text{
+        }
+        else if newPasswordTF.text != conformPasswordTF.text{
             createAlert(strAlert: "Conform Password Not match")
-        }else{
+        }
+        else{
+            
+            
+            
+            
+            
                 //createAlertAndNavigate(strAlert: "Password Updated successufully")
-            let result = DataBaseManager.shared.chageUserPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!, strNewPass: newPasswordTF.text!)
-            if result == true{
-                self.dismiss(animated: true, completion: nil)
+            if oldpassResult != false{
+                let result = DataBaseManager.shared.chageUserPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!, strNewPass: newPasswordTF.text!)
+                if result == true{
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }else{
+                createAlert(strAlert: "OldPassword Not match...")
             }
+           
                
         }
 

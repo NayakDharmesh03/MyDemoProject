@@ -10,6 +10,8 @@ import SideMenu
 
 class WhatsAppVC: UIViewController {
 
+    @IBOutlet weak var manuBtn: UIButton!
+    @IBOutlet weak var sideBarbtn: UIButton!
     @IBOutlet var manuView: UIView!
     @IBOutlet var btnFloating: UIButton!
     
@@ -79,23 +81,20 @@ class WhatsAppVC: UIViewController {
         // Set the text color of the unselected segments
         segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
         
-        //removing border of segment
-//        segmentControl.removeBottomBorderForSelectedSegment()
+
 
         setArrData()
         segmentControlDesign()
-        //****************
-       
-        
-        var str = "DharmeshNayak"
-              
-        let startIndex = str.index(str.startIndex, offsetBy: 6)
-        let endIndex = str.index(str.startIndex, offsetBy: 13)
-        let substr = str[startIndex..<endIndex]
-        print(substr) // Output: "shNayak"
-
+  
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+//           mytableView.addGestureRecognizer(tapGesture)
      
     }
+//    @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+//        // Dismiss your view here
+//        manuView.alpha = 0
+//
+//    }
     func segmentControlDesign(){
 //        let segmentedControl = UISegmentedControl(items: ["Item 1", "Item 2", "Item 3"])
         self.segmentControl.selectedSegmentIndex = 0
