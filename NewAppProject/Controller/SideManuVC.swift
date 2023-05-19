@@ -41,6 +41,10 @@ class SideManuVC: UIViewController {
             profileImage.layer.borderWidth = 1
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent // Change this to .default for black text
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.getData()
@@ -74,12 +78,13 @@ class SideManuVC: UIViewController {
     //MARK:- LOGOUT Button Action
     
     @IBAction func logoutBtnClicked(_ sender: UIButton) {
-            
+       
+
         let user_defaults = UserDefaults.standard
         user_defaults.removeObject(forKey: "username")
         user_defaults.removeObject(forKey: "password")
         user_defaults.set(false, forKey: "rememberMe")
-        
+
         //Back Login Screen
         let backToLoginVC = self.storyboard?.instantiateViewController(identifier: "initController") as! Login
         backToLoginVC.hidesBottomBarWhenPushed = true

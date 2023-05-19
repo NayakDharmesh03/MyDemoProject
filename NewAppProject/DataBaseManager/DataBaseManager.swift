@@ -186,10 +186,10 @@ final class DataBaseManager{
             return false
         }
     
-    //MARK:- Compare old UserPassword Query
     
     func matchOldPassword(userId:String,strOldPass:String)->Bool{
         let changeSelectQuery = "SELECT * FROM user_detail WHERE id=?"
+        self.openDataBase()
         if let result = DataBaseManager.database.executeQuery(changeSelectQuery, withArgumentsIn: [userId]) {
 
             while result.next(){
@@ -207,12 +207,11 @@ final class DataBaseManager{
         } else {
             print("Error executing query: \(DataBaseManager.database.lastErrorMessage())")
         }
-
         return false
 
     }
     //MARK:- Chage and Compare old UserPassword Query
-
+    
     func chageUserPassword(userId:String,strOldPass:String,strNewPass:String)->Bool{
         let changeSelectQuery = "SELECT * FROM user_detail WHERE id=?"
         if let result = DataBaseManager.database.executeQuery(changeSelectQuery, withArgumentsIn: [userId]) {

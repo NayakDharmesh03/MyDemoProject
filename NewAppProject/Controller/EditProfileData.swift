@@ -8,7 +8,7 @@
 import UIKit
 
 class EditProfileData: UITableViewController {
-   
+    
     @IBOutlet var menuView: UIView!
     var user_id = ""
     @IBOutlet var camaraBtn: UIButton!
@@ -72,19 +72,21 @@ class EditProfileData: UITableViewController {
     var arrSelectedState:[String] = []
     var arrSelectedCity:[String] = []
     
-    var strselectedCountry = ""
-    var strselectedState = ""
-    var strselectedCity = ""
+    var selectedCountry = ""
+    var selectedState = ""
+    var selectedCity = ""
     
-
-//    var selectedState = ""
+    
+    //    var selectedState = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //adding TapGestureRecognizer in profile Image
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        profileImage.isUserInteractionEnabled = true
+        profileImage.addGestureRecognizer(tapGesture)
         
-       
         
-        setProfileImage()
         textFieldDesign()
         allControlsConfiguration()
         
@@ -99,38 +101,33 @@ class EditProfileData: UITableViewController {
         
         cityPicker.dataSource = self
         cityPicker.delegate = self
-
+        
+        
+        
     }
-
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.getData()
     }
     
+    //MARK: - Camera btn tapped Action
     @IBAction func openCamera(_ sender: UIButton) {
-        
-        let imagePicker = UIImagePickerController()
-                 imagePicker.sourceType = .photoLibrary
-                 imagePicker.allowsEditing = false
-                 imagePicker.delegate = self
-                 present(imagePicker, animated: true, completion: nil)
+        imageViewTapped()
     }
     
-   func addBottomLine(){
+    
+    //MARK: - Adding Bottum Line in TextView
+    func addBottomLine(){
         // Create a new layer with the desired frame and properties
         let bottomLine = CALayer()
         bottomLine.frame = CGRect(x: 0, y: aboutmeTV.frame.height - 1, width: aboutmeTV.frame.width*3, height: 1)
         bottomLine.backgroundColor = UIColor.black.cgColor
-
+        
         // Add the layer as a sublayer of the text view's layer
         aboutmeTV.layer.addSublayer(bottomLine)
     }
     
-    func setProfileImage(){
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openGallary(tapGestureRecognizer:)))
-        profileImage.addGestureRecognizer(tapGesture)
-    }
     
     func setArroImage(){
         self.countryTF.setUpImage(imageName: "arrowtriangle.down.fill", on: .right)
@@ -149,21 +146,29 @@ class EditProfileData: UITableViewController {
         countryTF.setBottomBorder(color: "#3EFE46")
         stateTF.setBottomBorder(color: "#3EFE46")
         cityTF.setBottomBorder(color: "#3EFE46")
-
+        
     }
-
-   
-    func allControlsConfiguration(){
     
-        camaraBtn.layer.masksToBounds = true
+    
+    func allControlsConfiguration(){
+        
+        camaraBtn.layer.masksToBounds = false
+        camaraBtn.layer.shadowColor = UIColor.black.cgColor
+        camaraBtn.layer.shadowOffset = CGSize(width: 0, height: 1)
+        camaraBtn.layer.shadowOpacity = 0.5
+        camaraBtn.layer.shadowRadius = 3
         camaraBtn.layer.cornerRadius =  camaraBtn.frame.height/2
-        camaraBtn.layer.borderWidth = 1
+        camaraBtn.layer.borderWidth = 2
         camaraBtn.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-
+        
         profileImage.layer.masksToBounds = true
-        profileImage.layer.cornerRadius =  40
+        profileImage.layer.shadowColor = UIColor.black.cgColor
+        profileImage.layer.shadowOffset = CGSize(width: 0, height: 1)
+        profileImage.layer.shadowOpacity = 0.5
+        profileImage.layer.shadowRadius = 3
+        profileImage.layer.cornerRadius =  44
         profileImage.layer.borderWidth = 1
-        profileImage.layer.borderColor = #colorLiteral(red: 0.6509079337, green: 0.6510220766, blue: 0.6509007215, alpha: 1)
+        profileImage.layer.borderColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)
         
         updateBtn.layer.masksToBounds = true
         updateBtn.layer.cornerRadius =  updateBtn.frame.height/2
@@ -189,7 +194,7 @@ class EditProfileData: UITableViewController {
     }
     
     
-  //MARK:- Back Button Action
+    //MARK:- Back Button Action
     @IBAction func backButtonClicked(_ sender: UIButton) {
         if let navigationController = self.navigationController {
             navigationController.popViewController(animated: true)
@@ -220,11 +225,11 @@ class EditProfileData: UITableViewController {
         }
         else if dobTF.text == ""{
             self.createAlert(strAlert: "Please enter date of birth")
-
+            
         }
         else if birthTimeTF.text == ""{
             self.createAlert(strAlert: "Please enter BirthTime")
-
+            
         }
         else if countryTF.text == "" {
             self.createAlert(strAlert: "please select Coutry")
@@ -239,17 +244,17 @@ class EditProfileData: UITableViewController {
             self.createAlert(strAlert: "please enter about me")
         }
         else{
-                self.saveProfileImage { success,Message in
+            self.saveProfileImage { success,Message in
                 
                 if success == true{
                     
                     let updateResult = DataBaseManager.shared.updateUserData(strUserid: self.user_id, strfirstName: self.firstnameTextField.text!, strlastName: self.lastnameTextFileld.text!, strphone: self.mobileNoTextField.text!, strdateofbirth: self.dobTF.text!, strbirthtime: self.birthTimeTF.text!, strcountry: self.countryTF.text!, strstate: self.stateTF.text!, strcity: self.cityTF.text!, strgender: self.strGender, straboutme: self.aboutmeTV.text!, strImgUrl: Message)
                     
-                        if updateResult{
-                            self.createAlertAndNavigate(strAlert: "Data Updated successufully")
-                        }else{
-                            print("Data Not Update")
-                        }
+                    if updateResult{
+                        self.createAlertAndNavigate(strAlert: "Data Updated successufully")
+                    }else{
+                        print("Data Not Update")
+                    }
                 }
             }
         }
@@ -259,35 +264,24 @@ class EditProfileData: UITableViewController {
 extension EditProfileData : UITextFieldDelegate{
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-     
-            //This is for email text in lowercase
-            if textField.tag == 3{
-                    // Convert the replacement string to lowercase
-                    let lowerCaseString = string.lowercased()
-
-                    // Create a new string by replacing the entered text with the lowercase string
-                    let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: lowerCaseString)
-                
-                    // Update the text field with the new string
-                    textField.text = newString
-                    // Return false to prevent the default behavior of the text field
-                    return false
-
-            }else{
-                
-                //This is for max character for mobile and password
-                    let currentText = textField.text ?? ""
-                    guard let stringRange = Range(range, in: currentText) else {
-                        return false
-                    }
-                    
-                    let updateText = currentText.replacingCharacters(in: stringRange, with: string)
-                    
-                    if textField.tag == 4{
-                        return updateText.count <= 10
-                    }
-            }
-            return true
+        
+        //This is for max character for mobile and password
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else {
+            return false
+        }
+        
+        let updateText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        if(textField.tag == 1){
+            return updateText.count <= 30
+        }else if(textField.tag == 2){
+            return updateText.count <= 30
+        }else if (textField.tag == 4){
+            return updateText.count <= 10
+        }
+        
+        return true
         
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
@@ -295,7 +289,7 @@ extension EditProfileData : UITextFieldDelegate{
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-    
+        
         if textField.tag == 5{ //dateOfBirth picker open
             openDateDatePicker()
         }else if textField.tag == 6{ //birth time picker open
@@ -303,7 +297,7 @@ extension EditProfileData : UITextFieldDelegate{
         }
         else if textField.tag == 7{
             //country list
-            openPickerViewList()
+            openCoutryPickerViewList()
         }else if textField.tag == 8{
             
             if countryTF.text == ""{
@@ -312,7 +306,7 @@ extension EditProfileData : UITextFieldDelegate{
                 //state list
                 openStatePickerViewList()
             }
-           
+            
         }else if textField.tag == 9{
             if countryTF.text == "" && stateTF.text == ""{
                 createAlert(strAlert: "First select Country & State")
@@ -322,144 +316,166 @@ extension EditProfileData : UITextFieldDelegate{
                 //City list
                 openCityPickerViewList()
             }
-
+            
         }
     }
 }
 
 extension EditProfileData {
-
+    
     //MARK:- Save Profile image in Documents
     
-     func saveProfileImage(completion:@escaping (Bool,String)->()){
+    func saveProfileImage(completion:@escaping (Bool,String)->()){
         
-            if  let image = profileImage.image {
-                
-                let imageName = "img" + "\(Date().timeIntervalSince1970)" + ".png"
-                let destPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-                let fullDestPath = NSURL(fileURLWithPath: destPath).appendingPathComponent(imageName)
-                     
-                let fullDestPathString = fullDestPath!.path
-        
-                if !FileManager.default.fileExists(atPath: fullDestPath!.path){
-                        do{
-                            try image.pngData()!.write(to: fullDestPath!)
-                                print("Image Added Successfully")
-                                completion(true, fullDestPathString)
-                            
-                        }catch{
-                                print("Image Not Added")
-                                completion(false, "")
-                        }
-                }else {
+        if  let image = profileImage.image {
+            
+            let imageName = "img" + "\(Date().timeIntervalSince1970)" + ".png"
+            let destPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+            let fullDestPath = NSURL(fileURLWithPath: destPath).appendingPathComponent(imageName)
+            
+            let fullDestPathString = fullDestPath!.path
+            
+            if !FileManager.default.fileExists(atPath: fullDestPath!.path){
+                do{
+                    try image.pngData()!.write(to: fullDestPath!)
+                    print("Image Added Successfully")
+                    completion(true, fullDestPathString)
                     
-                        print("Image Not exist")
-                        completion(false, "")
+                }catch{
+                    print("Image Not Added")
+                    completion(false, "")
                 }
+            }else {
+                
+                print("Image Not exist")
+                completion(false, "")
             }
-     }
-
+        }
+    }
+    
 }
 extension EditProfileData{
     
     func documentsDir(strUrl:String) {
-            if let url = URL(string: strUrl) {
-                
-                    let destPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-                    let fullDestPath = NSURL(fileURLWithPath: destPath).appendingPathComponent(url.lastPathComponent)
-                    let fullDestPathString = fullDestPath!.path
-                    self.profileImage.image = UIImage(contentsOfFile: fullDestPathString)
+        if let url = URL(string: strUrl) {
             
-            } else {
-                print("Invalid URL")
-            }
-       
+            let destPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+            let fullDestPath = NSURL(fileURLWithPath: destPath).appendingPathComponent(url.lastPathComponent)
+            let fullDestPathString = fullDestPath!.path
+            self.profileImage.image = UIImage(contentsOfFile: fullDestPathString)
+            
+        } else {
+            print("Invalid URL")
+        }
+        
     }
     // MARK:- UserDefault data filled in Textfields here.
-            func getData(){
-                getDataFromDefaults { success, id, firstname, lastname, email, password, mobileno,dateofbirth,birthtime,country,state,city,gender,aboutme,imgUrl    in
+    func getData(){
+        getDataFromDefaults { success, id, firstname, lastname, email, password, mobileno,dateofbirth,birthtime,country,state,city,gender,aboutme,imgUrl    in
+            
+            if success == true {
+                self.firstnameTextField.text = firstname
+                self.lastnameTextFileld.text = lastname
+                self.emailTextField.text = email
+                self.mobileNoTextField.text = mobileno
+                
+                self.dobTF.text = dateofbirth
+                self.birthTimeTF.text = birthtime
+                self.countryTF.text = country
+                self.stateTF.text = state
+                self.cityTF.text = city
+                
+                self.selectedCountry = country
+                self.selectedState = state
+                self.selectedCity = city
+                
+                
+                if self.selectedCountry != ""{
+                    if let arst = self.statesArr[self.selectedCountry]{
+                        self.arrSelectedState = arst
+                    }
                     
-                            if success == true {
-                                self.firstnameTextField.text = firstname
-                                self.lastnameTextFileld.text = lastname
-                                self.emailTextField.text = email
-                                self.mobileNoTextField.text = mobileno
-                                
-                                self.dobTF.text = dateofbirth
-                                self.birthTimeTF.text = birthtime
-                                self.countryTF.text = country
-                                self.stateTF.text = state
-                                self.cityTF.text = city
-                                
-                                self.strselectedCountry = country
-                                self.strselectedState = state
-                                self.strselectedCity = city
-                                
-                                
-                                if self.strselectedCountry != ""{
-                                    if let arst = self.statesArr[self.strselectedCountry]{
-                                        self.arrSelectedState = arst
-                                    }
-                                    
-                                }
-                                
-                                if self.strselectedState != ""{
-                                    if let arct = self.citiesArr[self.strselectedState]{
-                                        self.arrSelectedCity = arct
-                                    }
-                                }
-                                
-                                
-                                self.strGender = gender
-                                
-                                if self.strGender == "Male"{
-                                    self.maleBtn.isSelected = true
-                                }else{
-                                    self.femaleBtn.isSelected = true
-                                }
-                                self.aboutmeTV.text = aboutme
-                                self.user_id = id
-                                self.documentsDir(strUrl:imgUrl)
-                            }else {
-                                //No data found
-                            }
-               }
-          }
+                }
+                
+                if self.selectedState != ""{
+                    if let arct = self.citiesArr[self.selectedState]{
+                        self.arrSelectedCity = arct
+                    }
+                }
+                
+                
+                self.strGender = gender
+                
+                if self.strGender == "Male"{
+                    self.maleBtn.isSelected = true
+                }else{
+                    self.femaleBtn.isSelected = true
+                }
+                self.aboutmeTV.text = aboutme
+                self.user_id = id
+                self.documentsDir(strUrl:imgUrl)
+            }else {
+                //No data found
+            }
+        }
+    }
     
 }
 
-//MARK:- Profile image open gallery and set Profile image
+//MARK:- Profile image open gallery & Camera and set Profile image
 
 extension EditProfileData: UINavigationControllerDelegate, UIImagePickerControllerDelegate{
     
-    @objc func openGallary(tapGestureRecognizer: UITapGestureRecognizer){
-
-        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
-            
-            let pickerview = UIImagePickerController()
-            pickerview.delegate = self
-            pickerview.sourceType = .savedPhotosAlbum
-            present(pickerview, animated: true)
+    //Image alert box of gallery and camara
+    @objc func imageViewTapped() {
+        let alert = UIAlertController(title: "Select an Option", message: nil, preferredStyle: .actionSheet)
+        
+        let galleryAction = UIAlertAction(title: "Open Gallery", style: .default) { _ in
+            self.openGallery()
         }
+        alert.addAction(galleryAction)
+        
+        let cameraAction = UIAlertAction(title: "Open Camera", style: .default) { _ in
+            self.openCamera()
+        }
+        alert.addAction(cameraAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
     }
     
-
+    
+    func openGallery() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func openCamera() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .camera
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
-            self.profileImage.image = image
-//            self.selectedImg = true
-                    
-        }
-           picker.dismiss(animated: true, completion: nil)
+        let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        profileImage.image = selectedImage
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
 
 extension EditProfileData {
-
- 
+    
+    
     //MARK:- For Date selecting date picker
     func openDateDatePicker(){
         datePicker1.preferredDatePickerStyle = .wheels
@@ -478,11 +494,7 @@ extension EditProfileData {
         let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
         toolBar.items = [cancelBtn,flexibleBtn,doneBtn]
-        
         dobTF.inputAccessoryView = toolBar
-        if let date = UserDefaults.standard.value(forKey: "Date") as? Date{
-            datePicker1.date = date
-        }
         
     }
     
@@ -492,77 +504,75 @@ extension EditProfileData {
         dateFormatter.timeStyle = .full
         let strDate = dateFormatter.string(from: sender.date)
         print(strDate)
-      }
+    }
     
     @objc func doneDateBtnClicked(){
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         dobTF.text = formatter.string(from: datePicker1.date)
-        let selecteddate = datePicker1.date
-        UserDefaults.standard.setValue(datePicker1.date, forKey: "Date")
         self.view.endEditing(true)
     }
     
-//MARK:- For Time selecting date picker
-
-        func openTimeDatePicker(){
-            datePicker2.preferredDatePickerStyle = .wheels
-            birthTimeTF.inputView = datePicker2
-            datePicker2.datePickerMode = .time
-            
-            let toolBar = UIToolbar()
-            toolBar.sizeToFit()
-            let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBtnClicked))
-            
-            let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBtnClicked))
-            
-            let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            
-            toolBar.items = [cancelBtn,flexibleBtn,doneBtn]
-            birthTimeTF.inputAccessoryView = toolBar
-            
-        }
+    //MARK:- For Time selecting date picker
+    
+    func openTimeDatePicker(){
+        datePicker2.preferredDatePickerStyle = .wheels
+        birthTimeTF.inputView = datePicker2
+        datePicker2.datePickerMode = .time
+        
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneBtnClicked))
+        
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBtnClicked))
+        
+        let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolBar.items = [cancelBtn,flexibleBtn,doneBtn]
+        birthTimeTF.inputAccessoryView = toolBar
+        
+    }
     
     //this is done btn in date picker
-        @objc func doneBtnClicked(){
-            let formatter = DateFormatter()
-            formatter.dateFormat = "hh:mm"
-
-            formatter.timeStyle = .medium
-            birthTimeTF.text = formatter.string(from: datePicker2.date)
-            self.view.endEditing(true)
-        }
+    @objc func doneBtnClicked(){
+        let formatter = DateFormatter()
+        formatter.dateFormat = "hh:mm"
+        
+        formatter.timeStyle = .medium
+        birthTimeTF.text = formatter.string(from: datePicker2.date)
+        self.view.endEditing(true)
+    }
     
     //this is cancel btn in date picker
-        @objc func cancelBtnClicked(){
-            self.view.endEditing(true)
-            self.resignFirstResponder()
-        }
-        
+    @objc func cancelBtnClicked(){
+        self.view.endEditing(true)
+        self.resignFirstResponder()
+    }
+    
 }
 
 //MARK:- UIPicker list For Select Country,State,City
 extension EditProfileData {
     
-       func openCountryListData(){
+    func openCountryListData(){
         
-            let toolBar = UIToolbar()
-            countryPicker.showsSelectionIndicator = true
-            countryTF.inputView = countryPicker
-            toolBar.sizeToFit()
-            
-            let Done = UIBarButtonItem(title:"Done", style: .done, target: self, action: #selector(doneButtonClick))
-            let flexibleBtn = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            
-            toolBar.setItems([flexibleBtn,Done], animated: false)
-            countryTF.inputAccessoryView = toolBar
-       }
-
-       @objc func doneButtonClick(){
-            let selectedItem = countriesArr[countryPicker.selectedRow(inComponent: 0)]
-            countryTF.text = selectedItem
-            countryTF.endEditing(true)
-       }
+        let toolBar = UIToolbar()
+        countryPicker.showsSelectionIndicator = true
+        countryTF.inputView = countryPicker
+        toolBar.sizeToFit()
+        
+        let Done = UIBarButtonItem(title:"Done", style: .done, target: self, action: #selector(doneButtonClick))
+        let flexibleBtn = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolBar.setItems([flexibleBtn,Done], animated: false)
+        countryTF.inputAccessoryView = toolBar
+    }
+    
+    @objc func doneButtonClick(){
+        let selectedItem = countriesArr[countryPicker.selectedRow(inComponent: 0)]
+        countryTF.text = selectedItem
+        countryTF.endEditing(true)
+    }
     
 }
 
@@ -609,11 +619,11 @@ extension EditProfileData: UIPickerViewDelegate,UIPickerViewDataSource{
             
         }
     }
-
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         
         if pickerView == countryPicker {
@@ -637,93 +647,119 @@ extension EditProfileData: UIPickerViewDelegate,UIPickerViewDataSource{
         }
     }
 }
+//MARK:- Coutry Picker
 extension EditProfileData{
     
-    //MARK:-  Open Country PickerView
+    func openCoutryPickerViewList(){
+        
+        countryTF.inputView = countryPicker
+        
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
+        
+        
+        
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
+        
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(coutrycancelBtnClicked))
+        
+        let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.items = [cancelBtn,flexibleBtn,doneBtn]
+        
+        countryTF.inputAccessoryView = toolbar
+        
+    }
     
-                func openPickerViewList(){
-
-                countryTF.inputView = countryPicker
-//                stateTF.inputView = statePicker
-//                cityTF.inputView = cityPicker
-
-                let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-                let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
-                toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), doneButton]
-                    
-                countryTF.inputAccessoryView = toolbar
-//                stateTF.inputAccessoryView = toolbar
-//                cityTF.inputAccessoryView = toolbar
-            }
-
-            @objc func doneButtonTapped() {
-              
-                let country = countriesArr[selectedCountryIndex]
-                if country != countryTF.text{
-                        stateTF.text = ""
-                        cityTF.text = ""
-                }else if stateTF.text == ""{
-                    //state & city does not select first select country
-                }
-                countryTF.text = country
-                strselectedCountry = country
-
-                
-                countryTF.resignFirstResponder()
-//                stateTF.resignFirstResponder()
-//                cityTF.resignFirstResponder()
-            }
+    @objc func doneButtonTapped() {
+        
+        let country = countriesArr[selectedCountryIndex]
+        if country != countryTF.text{
+            stateTF.text = ""
+            cityTF.text = ""
+        }else if stateTF.text == ""{
+            //state & city does not select first select country
+        }
+        countryTF.text = country
+        selectedCountry = country
+        
+        
+        countryTF.resignFirstResponder()
+        
+    }
+    
+    @objc func coutrycancelBtnClicked(){
+        self.view.endEditing(true)
+        self.resignFirstResponder()
+    }
 }
 
-//MARK:-  Open State PickerView
+//MARK:- State Picker
 extension EditProfileData{
     
-                func openStatePickerViewList(){
-
-                        stateTF.inputView = statePicker
-
-                        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-                        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneStateButtonTapped))
-                        toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), doneButton]
-                            
-                        stateTF.inputAccessoryView = toolbar
-                }
-
-                @objc func doneStateButtonTapped() {
-              
-                    let state = statesArr[strselectedCountry]![selectedStateIndex]
-                
-                    if state != stateTF.text{
-                        cityTF.text = ""
-                    }else if stateTF.text == ""{
-                        //city does not select
-                    }
-                    stateTF.text = state
-                    strselectedState = state
-                    
-                    stateTF.resignFirstResponder()
-                }
+    func openStatePickerViewList(){
+        
+        stateTF.inputView = statePicker
+        
+        
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneStateButtonTapped))
+        
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(stateCancelBtnClicked))
+        
+        let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.items = [cancelBtn,flexibleBtn,doneBtn]
+        stateTF.inputAccessoryView = toolbar
+    }
+    
+    @objc func doneStateButtonTapped() {
+        
+        let state = statesArr[selectedCountry]![selectedStateIndex]
+        
+        if state != stateTF.text{
+            cityTF.text = ""
+        }else if stateTF.text == ""{
+            //city does not select
+        }
+        stateTF.text = state
+        selectedState = state
+        
+        stateTF.resignFirstResponder()
+    }
+    
+    @objc func stateCancelBtnClicked(){
+        self.view.endEditing(true)
+        self.resignFirstResponder()
+    }
 }
 
-//MARK:-  Open City PickerView
+//MARK:- City Picker
 extension EditProfileData{
     
-                func openCityPickerViewList(){
-
-                    cityTF.inputView = cityPicker
-
-                    let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-                    let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneCityButtonTapped))
-                    toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), doneButton]
-                        
-                    cityTF.inputAccessoryView = toolbar
-                }
-
-                @objc func doneCityButtonTapped() {
-                
-                    let city = citiesArr[strselectedState]![selectedCityIndex]
-                    cityTF.text = city
-                    cityTF.resignFirstResponder()
-                }
+    func openCityPickerViewList(){
+        
+        cityTF.inputView = cityPicker
+        
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneCityButtonTapped))
+        
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cityCancelBtnClicked))
+        
+        let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.items = [cancelBtn,flexibleBtn,doneBtn]
+        cityTF.inputAccessoryView = toolbar
+    }
+    
+    @objc func doneCityButtonTapped() {
+        
+        let city = citiesArr[selectedState]![selectedCityIndex]
+        cityTF.text = city
+        cityTF.resignFirstResponder()
+    }
+    
+    @objc func cityCancelBtnClicked(){
+        self.view.endEditing(true)
+        self.resignFirstResponder()
+    }
 }
-

@@ -14,6 +14,7 @@ class ChangePasswordVC: UIViewController {
     @IBOutlet var newPasswordTF: UITextField!
     @IBOutlet var conformPasswordTF: UITextField!
     @IBOutlet var updatePasswordBtn: UIButton!
+    
     var user_id = ""
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,41 +53,63 @@ class ChangePasswordVC: UIViewController {
     
     @IBAction func updatePasswordBtnClicked(_ sender: UIButton) {
         
+        //cheking Old password
+        let OldPass = DataBaseManager.shared.matchOldPassword(userId: self.user_id, strOldPass: self.oldPasswordTF.text!)
         
-        
-        let oldpassResult = DataBaseManager.shared.matchOldPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!)
-                
-        if oldPasswordTF.text == "" && newPasswordTF.text == "" && conformPasswordTF.text == ""
+        if self.oldPasswordTF.text! == "" && self.newPasswordTF.text!=="" && self.conformPasswordTF.text!==""
         {
-            self.createAlert(strAlert: "Please fill Data")
-        }else if oldpassResult == false  {
-            createAlert(strAlert: "OldPassword Not match...")
+            self.createAlert(strAlert: "Please fill all Data")
         }
-        else if newPasswordTF.text == ""{
-            self.createAlert(strAlert: "Please enter new Password")
-        }else if conformPasswordTF.text == ""{
-            self.createAlert(strAlert: "Please enter conformpassword")
+        else if self.oldPasswordTF.text == ""{
+            self.createAlert(strAlert: "Please enter OldPassword ")
         }
-        else if newPasswordTF.text != conformPasswordTF.text{
-            createAlert(strAlert: "Conform Password Not match")
+        else if isValidPassword(testStr: oldPasswordTF.text!) ==  false
+        {
+            self.createAlert(strAlert: "OldPassword must be at least 8 letter")
         }
-        else{
+        else if !OldPass{
+            self.createAlert(strAlert: "OldPassword does not match")
+        }
+        else if self.newPasswordTF.text == ""{
+            self.createAlert(strAlert: "Please enter NewPassword ")
+        }
+        else if isValidPassword(testStr: newPasswordTF.text!) ==  false
+        {
+            self.createAlert(strAlert: "NewPassword must be at least 8 letter")
+        }
+        else if self.conformPasswordTF.text == ""{
+            self.createAlert(strAlert: "Please enter conformPassword")
+        }
+        else if isValidPassword(testStr: conformPasswordTF.text!) ==  false
+        {
+            self.createAlert(strAlert: "ConformPassword must be at least 8 letter")
+        }
+        else if newPasswordTF.text! != conformPasswordTF.text!
+        {
+            self.createAlert(strAlert: "conformPassword does not match")
+        }
+       else{
             
             
+            let loader = self.loader()
             
-            
-            
-                //createAlertAndNavigate(strAlert: "Password Updated successufully")
-            if oldpassResult != false{
-                let result = DataBaseManager.shared.chageUserPassword(userId: self.user_id, strOldPass: oldPasswordTF.text!, strNewPass: newPasswordTF.text!)
-                if result == true{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5){ //time delay
+                
+                //MARK:- update passwordc call in Database
+                
+                let result = DataBaseManager.shared.chageUserPassword(userId: self.user_id, strOldPass: self.oldPasswordTF.text!, strNewPass: self.newPasswordTF.text!)
+                
+                if result{ // if it's true then dismis popup view
                     self.dismiss(animated: true, completion: nil)
                 }
-            }else{
-                createAlert(strAlert: "OldPassword Not match...")
+                else{
+                    self.createAlert(strAlert: "Password not updated")
+                }
+                
+                self.stopLoad(loader: loader)
+                self.dismiss(animated: true, completion: nil)
             }
-           
-               
+    
         }
 
     }
@@ -109,10 +132,11 @@ extension ChangePasswordVC:UITextFieldDelegate{
     }
 }
 //MARK:- Loader code (Activity indicator)
-extension Login{
+extension ChangePasswordVC{
     
-    func loader2()->UIAlertController{
-        let alert = UIAlertController(title: " Fetching your email...", message: "Loading...", preferredStyle: .alert)
+    
+    func loader()->UIAlertController{
+        let alert = UIAlertController(title: "\t"+""+"Updating New Password", message:"Please wait...", preferredStyle: .alert)
         let indicator = UIActivityIndicatorView(frame: CGRect(x: 5, y: 10, width: 50, height: 50))
         indicator.hidesWhenStopped = true
         indicator.style = UIActivityIndicatorView.Style.large
@@ -123,7 +147,9 @@ extension Login{
         
     }
     
-    func stopLoad2(loader:UIAlertController) {
+    //MARK:- Activity Indicator Loading stop
+    
+    func stopLoad(loader:UIAlertController) {
         DispatchQueue.main.async {
             loader.dismiss(animated: true, completion: nil)
         }
@@ -134,7 +160,7 @@ extension ChangePasswordVC{
     // MARK:- shadow of popup view
     
     func dropShadow() {
-        popupVIew.layer.cornerRadius = 25
+        popupVIew.layer.cornerRadius = 30
         popupVIew.layer.masksToBounds = false
         popupVIew.layer.shadowColor = UIColor.black.cgColor
         popupVIew.layer.shadowOpacity = 0.9

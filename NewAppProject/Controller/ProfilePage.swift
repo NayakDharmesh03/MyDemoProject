@@ -48,11 +48,12 @@ class ProfilePage: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-    
+        tableView.separatorStyle = .none
+
         textFieldDesign()
         addBottomLine()
         profileImage.layer.masksToBounds = true
-        profileImage.layer.cornerRadius = 40
+        profileImage.layer.cornerRadius = 44
         profileImage.layer.borderWidth = 1
         profileImage.layer.borderColor = #colorLiteral(red: 0.01881233789, green: 0.1101799682, blue: 0.4214587212, alpha: 1)
         

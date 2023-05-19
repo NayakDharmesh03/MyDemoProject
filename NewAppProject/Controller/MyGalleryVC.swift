@@ -11,38 +11,12 @@ class MyGalleryVC: UIViewController {
 
     @IBOutlet weak var mycollectionView: UICollectionView!
     
-    var cameraImageArr = ["Darshan","Aarav","Aaradhya","Charlotte","Sanjana","Avni","Dharmesh","Meera","Harper"]
-    var recentImageArr = ["Nandini","Meera","Kavya","Ishani","Isabella"]
-    var downloadImageArr = ["Nandini","Aryabhai","Akshay","Cute","Modiji","Sanjana","PmModi"]
-    var favouriteImageArr = ["Aryabhai","Akshay","Cute","Modiji","Sanjana","PmModi"]
+    var cameraImageArr = ["pexels1","pexels2","pexels3","pexels4","pexels5"]
+    var recentImageArr = ["pexels3","Meera","pexels1","pexels6","pexels5"]
+    var downloadImageArr = ["pexels4","pexels5","pexels6","pexels1","pexels2","pexels3"]
+    var favouriteImageArr = ["pexels6","pexels1","pexels2","pexels3","pexels1","pexels2"]
 
-    var allImageArr = ["Darshan",
-                       "Olivia",
-                       "max-andrey",
-                        "Aaradhya",
-                        "Aarav",
-                        "pexels",
-                        "Aditya",
-                        "Avni",
-                        "arun-thomas",
-                        "Charlotte",
-                        "Aryabhai",
-                        "Akshay",
-                        "Cute",
-                        "Modiji",
-                        "Sanjana",
-                        "PmModi",
-                        "Dhara",
-                        "Dharmesh",
-                        "Divya",
-                        "Emma",
-                        "Evelyn",
-                        "Harper",
-                        "Isabella",
-                        "Ishani",
-                        "Kavya",
-                        "Meera",
-                        "Nandini"]
+    var allImageArr = ["pexels1","pexels2","pexels3","pexels4","pexels5","pexels3","pexels1","pexels6","pexels5","pexels4","pexels5","pexels6"]
     
     var categoryArr = ["All Image","Recent","Download","Favourite","Camera"]
     
@@ -67,6 +41,10 @@ class MyGalleryVC: UIViewController {
             self.galleryArr.append(Obj4)
             self.galleryArr.append(Obj5)
 
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+           return .lightContent // Change this to .default for black text
     }
        
     

@@ -20,7 +20,7 @@ class SelectedContactsVC: UIViewController {
     @IBOutlet var searchBtn: UIButton!
     @IBOutlet var searchbar: UISearchBar!
    
-    let data = [
+    var data = [
         ["name": "Darshan", "number": "+919281736212"],
         ["name": "Aaradhya", "number": "+919089785634"],
         ["name": "Aarav", "number": "+918281736210"],
@@ -45,16 +45,30 @@ class SelectedContactsVC: UIViewController {
         countContactsLbl.text = "\(data.count) contacts"
         searchView.isHidden = true
         manuContainerView.alpha = 0
-    
+        dropShadow()
+    }
+    func dropShadow() {
+        manuContainerView.layer.masksToBounds = false
+        manuContainerView.layer.shadowColor = UIColor.black.cgColor
+        manuContainerView.layer.shadowOpacity = 0.5
+        manuContainerView.layer.shadowOffset = .zero
+        manuContainerView.layer.shadowRadius = 5
+        manuContainerView.layer.shouldRasterize = true
+        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         manuContainerView.alpha = 0
     }
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+           return .lightContent // Change this to .default for black text
+    }
     @IBAction func searchBackBtnClicked(_ sender: UIButton) {
         self.searchbar.searchTextField.backgroundColor = .white
+        
+        self.filteredData = self.data
+        selectedContactsTbl.reloadData()
         searchView.isHidden = true
 
     }
@@ -79,7 +93,7 @@ extension SelectedContactsVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = selectedContactsTbl.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SelectedContactsTableViewCell
-        
+        cell.selectionStyle = .none
         let dict = isSearching ? filteredData[indexPath.row] : data[indexPath.row]
 
         cell.namelbl.text = dict["name"]

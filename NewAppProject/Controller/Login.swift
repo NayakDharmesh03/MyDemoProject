@@ -20,16 +20,19 @@ class Login: UIViewController{
     var emailTf:UITextField!
     var stremail = ""
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextField.textContentType = .none // Set to a different value or nil
         rememberMeButtonClicked()
         allControlsConfiguration()
+    
+        
     }
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        self.hidesBottomBarWhenPushed = true
-//    }
+
     override func viewDidAppear(_ animated: Bool) {
-        self.viewWillAppear(true)
+        super.viewDidAppear(animated)
         self.emailTextField.text = ""
         self.passwordTextField.text = ""
     }
@@ -59,9 +62,8 @@ class Login: UIViewController{
     }
     //MARK:- remember me radio button
     @IBAction func radioButtonClicked(_ sender: UIButton) {
-        
+    
         radioBtn.isSelected = !radioBtn.isSelected
-
         let user_Defaults = UserDefaults.standard
         user_Defaults.set(radioBtn.isSelected, forKey: "rememberMe")
  
@@ -92,7 +94,7 @@ class Login: UIViewController{
         
             let result = DataBaseManager.shared.userlogin(email:emailTextField.text!,pass:passwordTextField.text!)
             
-            if self.emailTextField.text! == "" && self.passwordTextField.text!==""
+        if self.emailTextField.text?.lowercased() == "" && self.passwordTextField.text!==""
             {
                 self.createAlert(strAlert: "Please fill email and password")
             }
@@ -115,13 +117,29 @@ class Login: UIViewController{
             }
             else
             {
-//                let emailResult = DataBaseManager.shared.checkUserEmailisExitOrNot(strEmail: self.emailTextField.text!)
-//
-//                let result = DataBaseManager.shared.userlogin(email:emailTextField.text!,pass:passwordTextField.text!)
+                
+                let username = emailTextField.text ?? ""
+                let password = passwordTextField.text ?? ""
+
+                   // Authenticate the user's credentials
+                   if result {
+                        if radioBtn.isSelected {
+                               UserDefaults.standard.set(username, forKey: "useremail")
+                        } else {
+                               UserDefaults.standard.removeObject(forKey: "useremail")
+                        }
+                        
+                        // Navigate to the main screen
+                        //Valid email & Password move next Screen
+                        let homeVC = self.storyboard?.instantiateViewController(identifier: "TabBarControl") as! TabBarControl
+                        self.navigationController?.pushViewController(homeVC, animated: true)
+                    
+                   } else {
+                       // Display an error message to the user
+                    createAlert(strAlert: "This user not exist")
+                   }
                       
-                            //Valid email & Password move next Screen
-                let homeVC = self.storyboard?.instantiateViewController(identifier: "TabBarControl") as! TabBarControl
-                self.navigationController?.pushViewController(homeVC, animated: true)
+               
                 
             }
             
@@ -134,21 +152,24 @@ class Login: UIViewController{
 
 extension Login:UITextFieldDelegate{
     //maximum charactor or data in textfield
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if textField.tag == 1{
-            // Convert the replacement string to lowercase
-            let lowerCaseString = string.lowercased()
+    
 
-            // Create a new string by replacing the entered text with the lowercase string
-            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: lowerCaseString)
-            // Update the text field with the new string
-            textField.text = newString
-            // Return false to prevent the default behavior of the text field
-            return false
-            
-            //this is for password max length
-        }else if textField.tag == 2{
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    
+//        if textField.tag == 1{
+//            // Convert the replacement string to lowercase
+//            let lowerCaseString = string.lowercased()
+//
+//            // Create a new string by replacing the entered text with the lowercase string
+//            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: lowerCaseString)
+//            // Update the text field with the new string
+//            textField.text = newString
+//            // Return false to prevent the default behavior of the text field
+//            return false
+//
+//            //this is for password max length
+//        }else
+          if textField.tag == 2{
             
             let currentText = textField.text ?? ""
             guard let stringRange = Range(range, in: currentText) else {
@@ -173,20 +194,18 @@ extension Login{
    
     
     func rememberMeButtonClicked(){
+       
         let user_Defaults = UserDefaults.standard
 
-            if user_Defaults.bool(forKey: "rememberMe") {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                
-                let homeVC = self.storyboard?.instantiateViewController(identifier: "TabBarControl") as! TabBarControl
-                self.navigationController?.pushViewController(homeVC, animated: true)
-                
-//                let profileVC = storyboard.instantiateViewController(withIdentifier: "Profile") as! ProfilePage
-//                navigationController?.pushViewController(profileVC, animated: false)
-                
-                
-            }
+                    if user_Defaults.bool(forKey: "rememberMe") {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+                        let homeVC = self.storyboard?.instantiateViewController(identifier: "TabBarControl") as! TabBarControl
+                        self.navigationController?.pushViewController(homeVC, animated: true)
+
+        }
     }
+    
     
     func resetDefaults() {
         let defaults = UserDefaults.standard

@@ -10,8 +10,6 @@ import SideMenu
 
 class WhatsAppVC: UIViewController {
 
-    @IBOutlet weak var manuBtn: UIButton!
-    @IBOutlet weak var sideBarbtn: UIButton!
     @IBOutlet var manuView: UIView!
     @IBOutlet var btnFloating: UIButton!
     
@@ -74,39 +72,38 @@ class WhatsAppVC: UIViewController {
         myGalleryViewContainer.alpha = 0
         mytableView.estimatedRowHeight = 121
         mytableView.rowHeight = UITableView.automaticDimension
+        dropShadow()
         
-        // Set the text color of the selected segment
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .selected)
-
-        // Set the text color of the unselected segments
-        segmentControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray], for: .normal)
-        
-
-
-        setArrData()
         segmentControlDesign()
-  
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-//           mytableView.addGestureRecognizer(tapGesture)
-     
+        
+        setArrData()
     }
-//    @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
-//        // Dismiss your view here
-//        manuView.alpha = 0
-//
-//    }
+    
+//MARK: - Segment control custome design
+    
     func segmentControlDesign(){
-//        let segmentedControl = UISegmentedControl(items: ["Item 1", "Item 2", "Item 3"])
-        self.segmentControl.selectedSegmentIndex = 0
-//        self.segmentControl.backgroundColor = UIColor.white
-//        self.segmentControl.tintColor = UIColor.blue
+        
+        // Set the selected segment text color to white and font size to 20
+        segmentControl.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)
+        ], for: .selected)
 
-        // Add a bottom border to the selected segment
-        self.segmentControl.addBottomBorderForSelectedSegment(borderColor: UIColor.white, borderWidth: 3)
-
+        // Set the unselected segment text color to gray and font size to 20
+        segmentControl.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor.gray,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)
+        ], for: .normal)
     }
-
-
+    func dropShadow() {
+        manuView.layer.masksToBounds = false
+        manuView.layer.shadowColor = UIColor.black.cgColor
+        manuView.layer.shadowOpacity = 0.5
+        manuView.layer.shadowOffset = .zero
+        manuView.layer.shadowRadius = 5
+        manuView.layer.shouldRasterize = true
+        
+    }
    func setArrData(){
         
     let obj = ContactNumber(strName: contactsName[0], strMobileNo: contactsNo[0], imgPhoto: UIImage(named: contactsName[0])!, BtnCollspan: false, timeLbl: timeArr[0])
@@ -151,12 +148,12 @@ class WhatsAppVC: UIViewController {
 
     
     }
-    //for status bar color
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        return .lightContent
-//    }
+//    for status bar color
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     override func viewWillAppear(_ animated: Bool) {
-//        self.viewDidLoad()
+        self.viewDidLoad()
         
         // if also gallery selected then shoiw gallery view
         if segmentControl.selectedSegmentIndex == 1{
@@ -168,17 +165,17 @@ class WhatsAppVC: UIViewController {
         super.touchesEnded(touches, with: event)
         manuView.alpha = 0
     }
+    
+//MARK: - Floating Button Action
+    
     @IBAction func btnFloatingAction(_ sender: UIButton) {
         
         let searchVC = self.storyboard?.instantiateViewController(withIdentifier: "SelectedContactsVC") as! SelectedContactsVC
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
-    
-    @IBAction func collspanShow(_ sender: UIButton) {
-        let indexPath = IndexPath(row: sender.tag, section: 0)
-        ArrContactNo[indexPath.row].btnCollspan.toggle()
-        self.mytableView.reloadRows(at: [indexPath], with: .automatic)
-    }
+
+//MARK: - Show manu Button Action
+
     @IBAction func showmanu(_ sender: UIButton) {
         self.manuView.alpha = 1
     }
@@ -199,6 +196,7 @@ class WhatsAppVC: UIViewController {
    
     
     @IBAction func segmentControler(_ sender: UISegmentedControl) {
+        
         if sender.selectedSegmentIndex == 1{
             self.titleLbl.text = "Gallery"
             self.myGalleryViewContainer.alpha = 1
@@ -213,9 +211,35 @@ class WhatsAppVC: UIViewController {
     }
     
     @IBAction func expandCellbtn(_ sender: UIButton) {
+        
+        guard let cell = self.mytableView.cellForRow(at: IndexPath(row: Int(sender.tag), section: 0)) as? contactTableViewCell else{
+            return
+        }
+        
+        let obj = self.ArrContactNo[sender.tag]
+        
+        self.selectedIndex = sender.tag
+        mytableView.deselectRow(at: IndexPath(row: Int(sender.tag), section: 0), animated: false)
+        
+        if selectedIndex == sender.tag {
+            if obj.btnCollspan == true{
+                obj.btnCollspan = false
+                self.isCollapce = false
+            }else{
+                obj.btnCollspan = true
+                self.isCollapce = true
+            }
+        }else{
+            self.isCollapce = true
+        }
+        
+        
+        //this for cell button collspan btn new code
+        for i in 0..<ArrContactNo.count {
+            ArrContactNo[i].btnCollspan = (i == sender.tag)
+        }
 
-       
-
+        mytableView.reloadData()
     }
 }
 
@@ -227,17 +251,14 @@ extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = mytableView.dequeueReusableCell(withIdentifier: "cells", for: indexPath) as! contactTableViewCell
         
-        cell.selectionStyle = .none
-        //this for cell button collspan btn
-        let button = cell.contentView.viewWithTag(100) as? UIButton
-        
         let cellObj = ArrContactNo[indexPath.row]
         
         cell.namelbl.text = cellObj.name
         cell.phoneNoLbl.text = "Phone " + " " + cellObj.contactNo
         cell.profileImage.image = cellObj.image
         cell.timeShowLbl.text = cellObj.timeLabl
-
+        
+        cell.selectionStyle = .none
         cell.showbtn.isSelected = cellObj.btnCollspan
         
         cell.showbtn.tag = indexPath.row
@@ -261,12 +282,8 @@ extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
         }
     }
     
-    
-    // table row collspacing
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
-//        let cell = tableView.cellForRow(at: indexPath) as! contactTableViewCell
-        
+        self.manuView.alpha = 0
         let obj = ArrContactNo[indexPath.row]
         self.selectedIndex = indexPath.row
         tableView.deselectRow(at: indexPath, animated: false)
@@ -283,40 +300,16 @@ extension WhatsAppVC:UITableViewDelegate,UITableViewDataSource{
             self.isCollapce = true
         }
         
-        
         //this for cell button collspan btn new code
         for i in 0..<ArrContactNo.count {
             ArrContactNo[i].btnCollspan = (i == indexPath.row)
         }
 
-        tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.reloadData()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.manuView.alpha = 0
+    }
 
-    }
-}
-extension UISegmentedControl {
-    
-    private var bottomBorderLayer: CALayer? {
-        return layer.sublayers?.first(where: { $0.name == "bottomBorderLayer" })
-    }
-    
-    func addBottomBorderForSelectedSegment(borderColor: UIColor, borderWidth: CGFloat) {
-        guard let selectedSegmentView = subviews[selectedSegmentIndex] as? UIControl else {
-            return
-        }
-        
-        // Remove existing bottom border layer if any
-        bottomBorderLayer?.removeFromSuperlayer()
-        
-        // Add bottom border layer to the selected segment
-        let borderLayer = CALayer()
-        borderLayer.name = "bottomBorderLayer"
-        borderLayer.frame = CGRect(x: 0, y: selectedSegmentView.frame.height - borderWidth, width: selectedSegmentView.frame.width, height: borderWidth)
-        borderLayer.backgroundColor = borderColor.cgColor
-        selectedSegmentView.layer.addSublayer(borderLayer)
-    }
-    
-    func removeBottomBorderForSelectedSegment() {
-        bottomBorderLayer?.removeFromSuperlayer()
-    }
 }

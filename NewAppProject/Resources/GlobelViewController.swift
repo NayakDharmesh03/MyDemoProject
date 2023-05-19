@@ -14,8 +14,7 @@ class GlobelViewController: UIViewController {
 
     }
     
-    
-    
+
 
 }
 extension UIViewController{
@@ -49,7 +48,7 @@ extension UIViewController{
     }
     //Password regex
     @objc func isValidPassword(testStr:String) -> Bool {
-        let passwordRegex = "[A-Z0-9a-z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{5,8}$"
+        let passwordRegex = "[A-Z0-9a-z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{8,}$"
         
         let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegex)
         return passwordTest.evaluate(with: testStr)
@@ -100,25 +99,30 @@ enum TextFieldImageSide {
 
 extension UITextField {
     func setUpImage(imageName: String, on side: TextFieldImageSide) {
-        let imageView = UIImageView(frame: CGRect(x: -15, y: 3, width: 15, height: 10))
-        imageView.tintColor = .black
+        let button = UIButton(frame: CGRect(x: -15, y: 3, width: 15, height: 10))
+        button.tintColor = .black
         if let imageWithSystemName = UIImage(systemName: imageName) {
-            imageView.image = imageWithSystemName
+            button.setImage(UIImage(systemName: imageName), for: .normal)
         } else {
-            imageView.image = UIImage(named: imageName)
+            button.setImage(UIImage(systemName: imageName), for: .normal)
         }
-        
-        let imageContainerView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 10))
-        imageContainerView.addSubview(imageView)
-        
+
+        button.addTarget(self, action: #selector(downArrowTapped), for: .touchUpInside)
+        let downArrobtn = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 10))
+        downArrobtn.addSubview(button)
+
         switch side {
         case .left:
-            leftView = imageContainerView
+            leftView = downArrobtn
             leftViewMode = .always
         case .right:
-            rightView = imageContainerView
+            rightView = downArrobtn
             rightViewMode = .always
         }
+    }
+    @objc func downArrowTapped() {
+        // Handle the tap of the down arrow button here
+        print("Down arrow tapped")
     }
 }
 
@@ -150,5 +154,3 @@ extension UIViewController{
         
     }
 }
-
-

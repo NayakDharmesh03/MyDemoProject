@@ -96,9 +96,9 @@ class SignUpTableViewController: UITableViewController{
         openTimeDatePicker()
         openDateDatePicker()
         
-        userTappedOnImage()
         allControlsConfiguration()
-        
+  
+
         countryTF.setUpImage(imageName: "arrowtriangle.down.fill", on: .right)
         stateTF.setUpImage(imageName: "arrowtriangle.down.fill", on: .right)
         cityTF.setUpImage(imageName: "arrowtriangle.down.fill", on: .right)
@@ -113,55 +113,26 @@ class SignUpTableViewController: UITableViewController{
         cityPicker.dataSource = self
         cityPicker.delegate = self
         
-        
-    }
-    
-    
-    @IBAction func openCamera(_ sender: UIButton) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = false
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-//MARK:- Open Gallery
-    func userTappedOnImage(){
-        
-        //------
-        let picker = UIImagePickerController()
-            picker.delegate = self
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: {
-                action in
-                
-                picker.sourceType = .camera
-                self.present(picker, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: {
-                action in
-                picker.sourceType = .photoLibrary
-                self.present(picker, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        //--------
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openGallary(tapGestureRecognizer:)))
+        //adding TapGestureRecognizer in profile Image
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        profileImage.isUserInteractionEnabled = true
         profileImage.addGestureRecognizer(tapGesture)
+        
+    }
+        
+    @IBAction func openCamera(_ sender: UIButton) {
+        imageViewTapped()
     }
     
-    
-    
-    //MARK:- Back Button code
+
+//MARK: - Back Button code
     @IBAction func backButtonClicked(_ sender: UIButton) {
         
         self.navigationController?.popViewController(animated: true)
         
     }
     
-    
+//MARK: - Gender selection
     @IBAction func radioButtonsClicked(_ sender: UIButton) {
         
         if sender.tag == 1{
@@ -198,54 +169,54 @@ class SignUpTableViewController: UITableViewController{
             
         }
         else if profileImage.image?.pngData() == imgSystem?.pngData(){
-            self.createAlert(strAlert: "please set Profile image")
+            self.createAlert(strAlert: "Please set Profile image")
         }
         else if(firstnameTextFied.text == ""){
-            self.createAlert(strAlert: "Please enter name first")
+            self.createAlert(strAlert: "Please enter firstname")
         }else if(lastnameTextFied.text == ""){
             self.createAlert(strAlert: "Please enter lastname")
         }
-        else if emailTextFied.text == ""{
+        else if emailTextFied.text?.lowercased() == ""{
             self.createAlert(strAlert: "Please enter email")
         }else if isValidEmail(testStr: emailTextFied.text!) ==  false
         {
             self.createAlert(strAlert: "Please Enter Valid email")
         }
         else if passwordTextFied.text == ""{
-            self.createAlert(strAlert: "Please enter password")
+            self.createAlert(strAlert: "Please Enter password")
         }
         else if isValidPassword(testStr: passwordTextFied.text!) == false{
             self.createAlert(strAlert: "Password must be at least 6 letter")
         }
         else if mobileTextFied.text == ""{
-            self.createAlert(strAlert: "Please enter mobile number")
+            self.createAlert(strAlert: "Please Enter mobile number")
         }else if isValidPhone(testStr: mobileTextFied.text!) == false{
             
             self.createAlert(strAlert: "Please Enter Valid phone")
             
         }
         else if dobTF.text == ""{
-            self.createAlert(strAlert: "Please enter date of birth")
+            self.createAlert(strAlert: "Please Enter date of birth")
             
         }
         else if birthTimeTF.text == ""{
-            self.createAlert(strAlert: "Please enter BirthTime")
+            self.createAlert(strAlert: "Please Enter BirthTime")
             
         }
         else if countryTF.text == "" {
-            self.createAlert(strAlert: "please select Coutry")
+            self.createAlert(strAlert: "Please Select Coutry")
         }
         else if stateTF.text == "" {
-            self.createAlert(strAlert: "please select state")
+            self.createAlert(strAlert: "Please Select state")
         }
         else if cityTF.text == "" {
-            self.createAlert(strAlert: "please select city")
+            self.createAlert(strAlert: "Please Select city")
         }
         else if !maleBtn.isSelected  && !femaleBtn.isSelected {
-            self.createAlert(strAlert: "please select gender")
+            self.createAlert(strAlert: "Please Select Gender")
         }
         else if aboutmeTV.text == "About Me"{
-            self.createAlert(strAlert: "please enter about me")
+            self.createAlert(strAlert: "Please Enter About me")
         }
         else
         {
@@ -262,6 +233,7 @@ class SignUpTableViewController: UITableViewController{
                             
                             if success == true{
                                 print("Data Added succsessFlly")
+                                self.createAlertAndNavigate(strAlert: "Data Added succsessfully")
                             }
                             else{
                                 print("Error")
@@ -270,8 +242,6 @@ class SignUpTableViewController: UITableViewController{
                         
                     }
                 }
-                self.navigationController?.popViewController(animated: true)
-                
             }else{
                 emailTextFied.text = ""
                 createAlert(strAlert: "This user email are allready registered")
@@ -280,6 +250,7 @@ class SignUpTableViewController: UITableViewController{
     }
     
 }
+
 extension SignUpTableViewController {
     
     //MARK:- Save Profile image in Documents
@@ -314,29 +285,54 @@ extension SignUpTableViewController {
     }
     
 }
-//MARK:- Profile image set
+
+//MARK:- Open Alert from bottum sheet for Gallery and Camera
 extension SignUpTableViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate{
     
-    @objc func openGallary(tapGestureRecognizer: UITapGestureRecognizer){
+    
+    //Alert sheet
+    @objc func imageViewTapped() {
+        let alert = UIAlertController(title: "Select an Option", message: nil, preferredStyle: .actionSheet)
         
-        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
-            
-            let pickerview = UIImagePickerController()
-            pickerview.delegate = self
-            pickerview.sourceType = .savedPhotosAlbum
-            present(pickerview, animated: true)
+        let galleryAction = UIAlertAction(title: "Open Gallery", style: .default) { _ in
+            self.openGallery()
         }
+        alert.addAction(galleryAction)
+        
+        let cameraAction = UIAlertAction(title: "Open Camera", style: .default) { _ in
+            self.openCamera()
+        }
+        alert.addAction(cameraAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
     }
     
+    func openGallery() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func openCamera() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+//        imagePicker.sourceType = .photoLibrary
+        imagePicker.sourceType = .camera
+        present(imagePicker, animated: true, completion: nil)
+    }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
-            self.profileImage.image = image
-            self.selectedImg = true
-            
-        }
-        picker.dismiss(animated: true, completion: nil)
+        let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        profileImage.image = selectedImage
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -352,20 +348,6 @@ extension SignUpTableViewController : UITextFieldDelegate{
     //maximum charactor or data in textfield
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        //This is for email text in lowercase
-        if textField.tag == 3{
-            // Convert the replacement string to lowercase
-            let lowerCaseString = string.lowercased()
-            
-            // Create a new string by replacing the entered text with the lowercase string
-            let newString = (textField.text as NSString?)?.replacingCharacters(in: range, with: lowerCaseString)
-            
-            // Update the text field with the new string
-            textField.text = newString
-            // Return false to prevent the default behavior of the text field
-            return false
-            
-        }else{
             let currentText = textField.text ?? ""
             guard let stringRange = Range(range, in: currentText) else {
                 return false
@@ -373,22 +355,24 @@ extension SignUpTableViewController : UITextFieldDelegate{
             
             let updateText = currentText.replacingCharacters(in: stringRange, with: string)
             
-            if textField.tag == 5{
-                return updateText.count <= 10
-            }else if textField.tag == 4{
-                return updateText.count <= 8
-            }else if(textField.tag == 1){
-                return updateText.count <= 24
+            if(textField.tag == 1){
+                return updateText.count <= 30
             }else if(textField.tag == 2){
-                return updateText.count <= 24
+                return updateText.count <= 30
+            }else if (textField.tag == 3){
+                return updateText.count <= 36
+            }else if (textField.tag == 4){
+                return updateText.count <= 8
+            }else if (textField.tag == 5){
+                return updateText.count <= 10
             }
             
-        }
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
         if textField.tag == 6{ //birthDate picker open
+
             openDateDatePicker()
         }else if textField.tag == 7{ //birth time picker open
             openTimeDatePicker()
@@ -425,15 +409,23 @@ extension SignUpTableViewController: UITextViewDelegate{
     
     func allControlsConfiguration(){
         
-        cameraBtn.layer.masksToBounds = true
+        cameraBtn.layer.masksToBounds = false
+        cameraBtn.layer.shadowColor = UIColor.black.cgColor
+        cameraBtn.layer.shadowOffset = CGSize(width: 0, height: 1)
+        cameraBtn.layer.shadowOpacity = 0.5
+        cameraBtn.layer.shadowRadius = 3
         cameraBtn.layer.cornerRadius =  cameraBtn.frame.height/2
-        cameraBtn.layer.borderWidth = 1
+        cameraBtn.layer.borderWidth = 2
         cameraBtn.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         profileImage.layer.masksToBounds = true
+        profileImage.layer.shadowColor = UIColor.black.cgColor
+        profileImage.layer.shadowOffset = CGSize(width: 0, height: 1)
+        profileImage.layer.shadowOpacity = 0.5
+        profileImage.layer.shadowRadius = 3
         profileImage.layer.cornerRadius =  profileImage.frame.height/2
         profileImage.layer.borderWidth = 1
-        profileImage.layer.borderColor = #colorLiteral(red: 0.6509079337, green: 0.6510220766, blue: 0.6509007215, alpha: 1)
+        profileImage.layer.borderColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)
         
         firstnameTextFied.layer.cornerRadius = firstnameTextFied.frame.height/2
         firstnameTextFied.layer.masksToBounds = true
@@ -585,44 +577,6 @@ extension SignUpTableViewController {
     
 }
 
-//MARK:- UIPicker list For Select Country,State,City
-extension SignUpTableViewController {
-    
-    func openCountryListData(){
-        
-        let toolBar = UIToolbar()
-        countryPicker.showsSelectionIndicator = true
-        countryTF.inputView = countryPicker
-        toolBar.sizeToFit()
-        
-        
-        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonClick))
-        
-        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(coutrycancelBtnClicked))
-        
-        let flexibleBtn = UIBarButtonItem (barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
-        toolBar.items = [cancelBtn,flexibleBtn,doneBtn]
-        
-        countryTF.inputAccessoryView = toolBar
-    }
-    
-    @objc func doneButtonClick(){
-        let selectedItem = countriesArr[countryPicker.selectedRow(inComponent: 0)]
-        countryTF.text = selectedItem
-        countryTF.endEditing(true)
-    }
-    
-//    @objc func coutrycancelBtnClicked(){
-//        self.view.endEditing(true)
-//        self.resignFirstResponder()
-//    }
-    
-}
-
-
-
-
 //MARK:- UIPicker DataSource and Delegate
 extension SignUpTableViewController: UIPickerViewDelegate,UIPickerViewDataSource{
     
@@ -683,16 +637,15 @@ extension SignUpTableViewController: UIPickerViewDelegate,UIPickerViewDataSource
         }
     }
 }
-
 //MARK:- Coutry Picker
 extension SignUpTableViewController{
     
     func openPickerViewList(){
         
         countryTF.inputView = countryPicker
-    
+        
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
-
+        
         
         
         let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
@@ -703,12 +656,8 @@ extension SignUpTableViewController{
         
         toolbar.items = [cancelBtn,flexibleBtn,doneBtn]
         
-        
-//        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
-//        toolbar.items = [UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), doneButton]
-//
         countryTF.inputAccessoryView = toolbar
- 
+        
     }
     
     @objc func doneButtonTapped() {
@@ -725,7 +674,7 @@ extension SignUpTableViewController{
         
         
         countryTF.resignFirstResponder()
-  
+        
     }
     
     @objc func coutrycancelBtnClicked(){

@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class CollectionImageVC: UIViewController {
     @IBOutlet var manu: UIView!
     @IBOutlet var titleLbl: UILabel!
@@ -15,7 +14,7 @@ class CollectionImageVC: UIViewController {
     @IBOutlet var backBtn: UIButton!
     @IBOutlet var previousBtn: UIButton!
     @IBOutlet var nextBtn: UIButton!
-
+    
     @IBOutlet var imageCountlbl: UILabel!
     @IBOutlet var collectionview: UICollectionView!
     
@@ -26,54 +25,67 @@ class CollectionImageVC: UIViewController {
     var totalImage = 0
     var currentIndex = 0
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        dropShadow()
         manu.alpha = 0
         titleLbl.text = headerTitle
         imageCountlbl.text = "\(currentIndex+1)" + "/" + "\(gallaryImageArr.count)"
         totalImage = gallaryImageArr.count
+    }
+    func dropShadow() {
+        manu.layer.masksToBounds = false
+        manu.layer.shadowColor = UIColor.black.cgColor
+        manu.layer.shadowOpacity = 0.5
+        manu.layer.shadowOffset = .zero
+        manu.layer.shadowRadius = 5
+        manu.layer.shouldRasterize = true
+        
+    }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent // Change this to .default for black text
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         self.manu.alpha = 0
     }
-   
-
+    
+    
     @IBAction func backBtn(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
     }
     @IBAction func showManu(_ sender: UIButton) {
         manu.alpha = 1
-
+        
     }
     
     //nextButtonTapped Action
-
+    
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         
+        nextBtn.isEnabled = currentIndex < totalImage - 1
         
         if currentIndex < gallaryImageArr.count - 1 {
-                currentIndex += 1
+            currentIndex += 1
             imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
             collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
-            }
-
+        }
+        
     }
-
+    
     //previousButtonTapped Action
     @IBAction func previousButtonTapped(_ sender: UIButton) {
-        
+        previousBtn.isEnabled = currentIndex > 0
         if currentIndex > 0 {
-                currentIndex -= 1
+            currentIndex -= 1
             imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
             collectionview.scrollToItem(at: IndexPath(item: currentIndex, section: 0), at: .centeredHorizontally, animated: true)
-            }
-
+        }
+        
     }
-
+    
     
 }
 
@@ -88,6 +100,7 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
         mycell.images.image = UIImage(named: gallaryImageArr[indexPath.row] )
         
         nextBtn.isEnabled = currentIndex < totalImage - 1
+        
         previousBtn.isEnabled = currentIndex > 0
         
         imageCountlbl.text = "\(currentIndex+1)" + "/" + "\(gallaryImageArr.count)"
@@ -100,16 +113,21 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
     // This is sliding images us
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let visibleRect = CGRect(origin: collectionview.contentOffset, size: collectionview.bounds.size)
-           let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-           guard let indexPath = collectionview.indexPathForItem(at: visiblePoint) else {
-               return
-           }
-           currentIndex = indexPath.item
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        guard let indexPath = collectionview.indexPathForItem(at: visiblePoint) else {
+            return
+        }
+        
+        currentIndex = indexPath.item
         imageCountlbl.text = "\(currentIndex + 1)/\(gallaryImageArr.count)"
+        
+        nextBtn.isEnabled = currentIndex < totalImage - 1
+        previousBtn.isEnabled = currentIndex > 0
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
+            
             let contentOffset = scrollView.contentOffset.x
             let contentWidth = scrollView.contentSize.width
             let pageWidth = scrollView.bounds.width
@@ -120,11 +138,15 @@ extension CollectionImageVC:UICollectionViewDelegate,UICollectionViewDataSource{
             let duration = TimeInterval(distance / pageWidth * 0.3)
             currentIndex = nextPage
             UIView.animate(withDuration: duration, delay: 0, options: [.curveEaseOut], animations: {
+                
+                self.nextBtn.isEnabled = self.currentIndex < self.totalImage - 1
+                self.previousBtn.isEnabled = self.currentIndex > 0
+                
                 scrollView.contentOffset.x = nextX
             }, completion: nil)
         }
     }
-
+    
     
 }
 

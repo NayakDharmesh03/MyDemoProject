@@ -10,48 +10,43 @@ import SideMenu
 
 class HomeScreenVC: UIViewController {
     
-    @IBOutlet var manuView: UIView!
+    @IBOutlet var manuView: UIView! //Manu view for three dot in right top corner
     
     @IBOutlet weak var tableview: UITableView!
     
-    var ImageArr:[HomeCellImage] = []
+    var arrImages1 = ["pexels1","pexels2","pexels3","pexels4","pexels5"]
+    var arrImages2 = ["pexels3","Meera","pexels1","pexels6","pexels5"]
+    var arrImages3 = ["pexels4","pexels5","pexels6","pexels1","pexels2","pexels3"]
+    var arrImages4 = ["pexels6","pexels1","pexels2","pexels3","pexels1","pexels2"]
+    var arrImages5 = ["pexels3","pexels1","pexels6","pexels5","pexels4","pexels5","pexels6"]
     
+    var ImageArr:[HomeCellImage] = []
+        
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         manuView.alpha = 0
         dropShadow()
         
         
         //This is Profile name, Location and Post profileImage & PostImage Arrays
         
-        let obj1 = HomeCellImage(arrImages: ["Aarav","Aaradhya","Charlotte","Sanjana","Avni","Dharmesh","Meera","Harper"], strUserName: "Dharmesh", strLocation: "Mumbai",strUserImg: "Dharmesh",isLike: false, isBookMark: false, currentpage: 0)
-        let obj2 = HomeCellImage(arrImages: ["Nandini","Meera","Kavya","Ishani","Isabella"], strUserName: "Aaradhya", strLocation: "Delhi",strUserImg: "Aaradhya",isLike: false, isBookMark: false, currentpage: 0)
-        let obj3 = HomeCellImage(arrImages: ["Akshay","Nandini","Aryabhai","Cute","Modiji","Sanjana","PmModi"], strUserName: "Sanjana", strLocation: "Jaipur",strUserImg: "Sanjana",isLike: false, isBookMark:false , currentpage: 0)
-        let obj4 = HomeCellImage(arrImages: ["Aryabhai","Akshay","Cute","Modiji","Sanjana","PmModi"], strUserName: "Harper", strLocation: "Amritsar",strUserImg: "Harper",isLike: false, isBookMark:false, currentpage: 0)
-        let obj5 = HomeCellImage(arrImages: ["PmModi","max-andrey","grossgasteiger","Cute","arun-thomas","Akshay","Aryabhai"], strUserName: "Ishani", strLocation: "Banglore",strUserImg: "Ishani",isLike: false, isBookMark: false, currentpage: 0)
-        
-//        let obj6 = HomeCellImage(arrImages: ["Aarav","Aaradhya","Charlotte","Sanjana","Avni","Dharmesh","Meera","Harper"], strUserName: "Dharmesh", strLocation: "Mumbai",strUserImg: "Dharmesh",isLike: false, isBookMark: false, currentpage: 0)
-//        let obj7 = HomeCellImage(arrImages: ["Nandini","Meera","Kavya","Ishani","Isabella"], strUserName: "Aaradhya", strLocation: "Delhi",strUserImg: "Aaradhya",isLike: false, isBookMark: false, currentpage: 0)
-//        let obj8 = HomeCellImage(arrImages: ["Akshay","Nandini","Aryabhai","Cute","Modiji","Sanjana","PmModi"], strUserName: "Sanjana", strLocation: "Jaipur",strUserImg: "Sanjana",isLike: false, isBookMark:false , currentpage: 0)
-//        let obj9 = HomeCellImage(arrImages: ["Aryabhai","Akshay","Cute","Modiji","Sanjana","PmModi"], strUserName: "Harper", strLocation: "Amritsar",strUserImg: "Harper",isLike: false, isBookMark:false, currentpage: 0)
-//        let obj10 = HomeCellImage(arrImages: ["PmModi","max-andrey","grossgasteiger","Cute","arun-thomas","Akshay","Aryabhai"], strUserName: "Ishani", strLocation: "Banglore",strUserImg: "Ishani",isLike: false, isBookMark: false, currentpage: 0)
-        
-        
+        let obj1 = HomeCellImage(arrImages: arrImages1, strUserName: "Dharmesh", strLocation: "Mumbai",strUserImg: "Dharmesh",isLike: false, isBookMark: false, currentpage: 0)
+        let obj2 = HomeCellImage(arrImages: arrImages2, strUserName: "Aaradhya", strLocation: "Delhi",strUserImg: "Aaradhya",isLike: false, isBookMark: false, currentpage: 0)
+        let obj3 = HomeCellImage(arrImages: arrImages4, strUserName: "Sanjana", strLocation: "Jaipur",strUserImg: "Sanjana",isLike: false, isBookMark:false , currentpage: 0)
+        let obj4 = HomeCellImage(arrImages: arrImages3, strUserName: "Harper", strLocation: "Amritsar",strUserImg: "Harper",isLike: false, isBookMark:false, currentpage: 0)
+        let obj5 = HomeCellImage(arrImages: arrImages5, strUserName: "Ishani", strLocation: "Banglore",strUserImg: "Ishani",isLike: false, isBookMark: false, currentpage: 0)
+    
         self.ImageArr.append(obj1)
         self.ImageArr.append(obj2)
         self.ImageArr.append(obj3)
         self.ImageArr.append(obj4)
         self.ImageArr.append(obj5)
-        
-//        self.ImageArr.append(obj6)
-//        self.ImageArr.append(obj7)
-//        self.ImageArr.append(obj8)
-//        self.ImageArr.append(obj9)
-//        self.ImageArr.append(obj10)
+
         
         
     }
-    
+    //Shadow for manu View
     func dropShadow() {
         manuView.layer.masksToBounds = false
         manuView.layer.shadowColor = UIColor.black.cgColor
@@ -62,12 +57,13 @@ class HomeScreenVC: UIViewController {
         
     }
     
+    //Show manu View Action
     @IBAction func showMnau(_ sender: Any) {
         self.manuView.alpha = 1
         
     }
     
-    //like btn
+    //Like btn Action
     @IBAction func likeBtnTapped(_ sender: UIButton) {
         
         let obj = self.ImageArr[sender.tag]
@@ -84,11 +80,15 @@ class HomeScreenVC: UIViewController {
 
         
     }
+    //Comment button Action
     @IBAction func commentBtnTapped(_ sender: UIButton) {
     }
+    
+    //Share button Action
     @IBAction func shareBtnTapped(_ sender: UIButton) {
     }
     
+    //BookMark button Action
     @IBAction func bookmarkBtnTapped(_ sender: UIButton) {
         
         let obj = self.ImageArr[sender.tag]
@@ -100,7 +100,6 @@ class HomeScreenVC: UIViewController {
         {
             obj.isbookMark = true
             sender.isSelected = true
-//            sender.setImage(UIImage(named:"bookmark (1)"), for: .selected)
         }
         
     }
@@ -134,7 +133,6 @@ extension HomeScreenVC:UITableViewDataSource,UITableViewDelegate{
     
    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Table numberOfRowsInSection:-",section)
         return ImageArr.count
     }
     
@@ -164,24 +162,30 @@ extension HomeScreenVC:UITableViewDataSource,UITableViewDelegate{
         return cell
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.manuView.alpha = 0
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.manuView.alpha = 0
+    }
+    
 
 }
 
-//MARK:- This is for CollectionView UICollectionViewDelegate,UICollectionViewDataSource
+//MARK: - This is for CollectionView UICollectionViewDelegate,UICollectionViewDataSource
 
 extension HomeScreenVC:UICollectionViewDelegate,UICollectionViewDataSource{
     
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("collectionView numberOfItemsInSection:-",section)
 
         return self.ImageArr[collectionView.tag].arrImages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! HomeImageCollectionViewCell
-        print("cellForItemAt:-",indexPath.item)
 
         let obj = self.ImageArr[collectionView.tag]
         cell.homeImages.image = UIImage(named: obj.arrImages[indexPath.item])
@@ -189,10 +193,9 @@ extension HomeScreenVC:UICollectionViewDelegate,UICollectionViewDataSource{
         return cell
     }
     
-    // MARK:- UICollectionViewDelegate
+// MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print("willDisplay cell:-",indexPath.item)
         guard let cellTbl = self.tableview.cellForRow(at: IndexPath(row: collectionView.tag, section: 0)) as? MyPostTableViewCell else {
             return
         }
@@ -201,22 +204,13 @@ extension HomeScreenVC:UICollectionViewDelegate,UICollectionViewDataSource{
         
     }
     
-    // MARK: - UICollectionViewDelegate
-    
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        let witdh = scrollView.frame.width - (scrollView.contentInset.left*2)
-//        let index = scrollView.contentOffset.x / witdh
-//        let roundedIndex = round(index)
-//
-//    }
 }
-
 // MARK: - UICollectionViewDelegateFlowLayout
+
 extension HomeScreenVC: UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = collectionView.frame.size
-        return CGSize(width: size.width, height: size.height)
+        return collectionView.frame.size
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)

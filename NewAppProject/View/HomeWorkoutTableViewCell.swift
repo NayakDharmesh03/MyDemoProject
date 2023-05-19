@@ -10,6 +10,7 @@ import Cosmos
 class HomeWorkoutTableViewCell: UITableViewCell {
     
     
+    @IBOutlet weak var cosmosRatingView: CosmosView!
     @IBOutlet weak var cellView: UIView! //subView
     @IBOutlet weak var cellsubView: UIView! //subView
     @IBOutlet weak var btnSwitch: UISwitch!
@@ -29,7 +30,7 @@ class HomeWorkoutTableViewCell: UITableViewCell {
 
     let sliderMaxvalue = 100
     
-    var sliderValueChanged: ((Float) -> Void)?
+    var sliderValueChanged: ((Int) -> Void)?
     var switchValueChanged: ((Bool) -> Void)?
     
     override func awakeFromNib() {
@@ -58,24 +59,49 @@ class HomeWorkoutTableViewCell: UITableViewCell {
         mySlider.setThumbImage(image, for: .highlighted)
         
         //cell view shadow
-        cellView.layer.shadowColor = UIColor.black.cgColor
-        cellView.layer.shadowOffset = CGSize(width: 0, height: 1)
-        cellView.layer.shadowOpacity = 0.5
-        cellView.layer.shadowRadius = 4
-        cellView.layer.cornerRadius = 15
-        cellView.layer.masksToBounds = false
+        cellsubView.layer.shadowColor = UIColor.black.cgColor
+        cellsubView.layer.shadowOffset = CGSize(width: 0, height: 1)
+        cellsubView.layer.shadowOpacity = 0.5
+        cellsubView.layer.shadowRadius = 4
+        cellsubView.layer.cornerRadius = 15
+        cellsubView.layer.masksToBounds = false
     }
     
 
     @objc func sliderValueChanged(_ sender: UISlider) {
-        sliderValueChanged?(sender.value)
+        sliderValueChanged?(Int(sender.value))
     }
 
     @objc func switchValueChanged(_ sender: UISwitch) {
         switchValueChanged?(sender.isOn)
     }
  
-  
+    @IBAction func starRattingAction(_ sender: UIButton) {
+        
+        if star1.isSelected == false{
+            star1.isSelected = true
+        }else if star1.isSelected == true{
+            if star2.isSelected == true || star3.isSelected == true{
+                star2.isSelected = false
+                star3.isSelected = false
+            }
+        }
+        else if star2.isSelected == true{
+            
+            if star3.isSelected == true{
+                star3.isSelected = false
+            }else if star1.isSelected == false{
+                star1.isSelected = true
+            }
+        }else if star3.isSelected == false{
+            star1.isSelected = true
+            star2.isSelected = true
+        }
+        else if star3.isSelected == true{
+            star3.isSelected = false
+        }
+        
+    }
   
     //------------------------
     override func setSelected(_ selected: Bool, animated: Bool) {
